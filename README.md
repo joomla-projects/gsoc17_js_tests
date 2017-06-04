@@ -95,9 +95,4 @@ Copyright
 * Copyright (C) 2005 - 2017 Open Source Matters. All rights reserved.
 * [Special Thanks](https://docs.joomla.org/Special:MyLanguage/Joomla!_Credits_and_Thanks)
 * Distributed under the GNU General Public License version 2 or later
-<<<<<<< HEAD
-* See [License details](https://docs.joomla.org/Joomla_Licenses)
->>>>>>> 8a19a7b70473374aeb0f97e79b27459b78e87ca8
-=======
 * See [License details](https://docs.joomla.org/Special:MyLanguage/Joomla_Licenses)
->>>>>>> 4542cf31f18fc819cf1c8e9cb10b13c5e9d58c12
