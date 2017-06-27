@@ -31,20 +31,23 @@ jQuery(function($)
     var toggle = document.getElementsByName('span.treeselect-toggle');
     for (var i = 0; i < toggle.length; i++) {
         var element = toggle[i];
-        element.click = function () {
-            $i = $(this);
+	    element.addEventListener('click', function () {
+            var i = event.target;
 
             // Take care of parent UL
-            if ($i.parent().find('ul.treeselect-sub').is(':visible')) {
-                $i.removeClass('fa-chevron-down').addClass('fa-chevron-right');
-                $i.parent().find('ul.treeselect-sub').hide();
-                $i.parent().find('ul.treeselect-sub i.treeselect-toggle').removeClass('fa-chevron-down').addClass('fa-chevron-right');
+            if (i.parentNode.querySelector('ul.treeselect-sub').offsetLeft > 0) {
+                i.classList.remove('fa-chevron-down');
+                i.classList.add('fa-chevron-right');
+                i.parentNode.querySelector('ul.treeselect-sub').style.display = 'none';
+                i.parentNode.querySelector('ul.treeselect-sub i.treeselect-toggle').remove('fa-chevron-down');
+                i.parentNode.querySelector('ul.treeselect-sub i.treeselect-toggle').add('fa-chevron-right');
             } else {
-                $i.removeClass('fa-chevron-right').addClass('fa-chevron-down');
-                $i.parent().find('ul.treeselect-sub').show();
+                i.classList.remove('fa-chevron-right');
+                i.classList.add('fa-chevron-down');
+                i.parentNode.querySelector('ul.treeselect-sub').style.display = 'visible';
                 $i.parent().find('ul.treeselect-sub i.treeselect-toggle').removeClass('fa-chevron-right').addClass('fa-chevron-down');
             }
-        };
+        });
     }
 
 	// Takes care of the filtering
