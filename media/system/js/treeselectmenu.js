@@ -2,27 +2,35 @@
  * @copyright  Copyright (C) 2005 - 2017 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
-jQuery(function($)
-{
-	var treeselectmenu = $('div#treeselectmenu').html();
+Joomla = window.Joomla || {};
 
-	$('.treeselect li').each(function()
+(function(Joomla)
+{
+	var treeselectmenu = document.getElementById("treselectmenu");
+	var treeselect = document.getElementsByClassName("treeselect");
+	var element = treeselect.getElementsByTagName("li");
+
+	element.forEach(function()
 	{
-		$li = $(this);
-		$div = $li.find('div.treeselect-item:first');
+		var li = event.target;
+		var div = li.find('div.treeselect-item:first');
+		var span = document.createElement("span");
 
 		// Add icons
-		$li.prepend('<span class="icon-"></span>');
+		li = document.createElement('span');
+		li.className = "icon-";
 
-		if ($li.find('ul.treeselect-sub').length) {
+		if (li.querySelector('ul.treeselect-sub').length) {
 			// Add classes to Expand/Collapse icons
-			$li.find('span.icon-').addClass('treeselect-toggle fa-chevron-down');
+			li.querySelector('span.icon-').classList.add('treeselect-toggle fa-chevron-down');
 
 			// Append drop down menu in nodes
-			$div.find('label:first').after(treeselectmenu);
+			// $div.find('label:first').after(treeselectmenu);
+			var element = div.querySelector('label:first');
+			element.parentNode.insertBefore(treeselectmenu, element);
 
-			if (!$li.find('ul.treeselect-sub ul.treeselect-sub').length) {
-				$li.find('div.treeselect-menu-expand').remove();
+			if (!li.querySelector('ul.treeselect-sub ul.treeselect-sub').length) {
+				li.querySelector('div.treeselect-menu-expand').classList.remove();
 			}
 		}
 	});
@@ -39,37 +47,40 @@ jQuery(function($)
                 i.classList.remove('fa-chevron-down');
                 i.classList.add('fa-chevron-right');
                 i.parentNode.querySelector('ul.treeselect-sub').style.display = 'none';
-                i.parentNode.querySelector('ul.treeselect-sub i.treeselect-toggle').remove('fa-chevron-down');
-                i.parentNode.querySelector('ul.treeselect-sub i.treeselect-toggle').add('fa-chevron-right');
+                i.parentNode.querySelector('ul.treeselect-sub i.treeselect-toggle').classList.remove('fa-chevron-down');
+                i.parentNode.querySelector('ul.treeselect-sub i.treeselect-toggle').classList.add('fa-chevron-right');
             } else {
                 i.classList.remove('fa-chevron-right');
                 i.classList.add('fa-chevron-down');
                 i.parentNode.querySelector('ul.treeselect-sub').style.display = 'visible';
-                $i.parent().find('ul.treeselect-sub i.treeselect-toggle').removeClass('fa-chevron-right').addClass('fa-chevron-down');
+                i.parentNode.querySelector('ul.treeselect-sub i.treeselect-toggle').classList.remove('fa-chevron-right');
+                i.parentNode.querySelector('ul.treeselect-sub i.treeselect-toggle').classList.add('fa-chevron-down');
             }
         });
     }
 
 	// Takes care of the filtering
-	$('#treeselectfilter').keyup(function()
+	var treeselectfilter = document.getElementById('treeselectfilter');
+	treeselectfilter.addEventListener('keyup', function()
 	{
-		var text = $(this).val().toLowerCase();
+		var text = event.target.toLowerCase();
 		var hidden = 0;
-		$("#noresultsfound").hide();
-		var $list_elements = $('.treeselect li');
-		$list_elements.each(function()
+		document.getElementById('noresultsfound').style.display = 'none';
+		var list_elements = document.getElementsByClassName('treeselect');
+		var elements = list_elements.getElementsByTagName('li');
+		elements.each(function()
 		{
-			if ($(this).text().toLowerCase().indexOf(text) == -1) {
-				$(this).hide();
+			if (event.target.toLowerCase().indexOf(text) == -1) {
+				event.target.style.display = 'none';
 				hidden++;
 			}
 			else {
-				$(this).show();
+				event.target.style.display = 'visible';
 			}
 		});
-		if(hidden == $list_elements.length)
+		if(hidden == list_elements.length)
 		{
-			$("#noresultsfound").show();
+			event.target.style.display = 'visible';
 		}
 	});
 
@@ -90,32 +101,38 @@ jQuery(function($)
     });
 
 	// Unchecks all checkboxes the tree
-	$('#treeCollapseAll').click(function()
+	document.getElementById('treeCollapseAll').click(function()
 	{
-		$('ul.treeselect ul.treeselect-sub').hide();
-		$('ul.treeselect i.treeselect-toggle').removeClass('fa-chevron-down').addClass('fa-chevron-right');
+		var treeselect = document.getElementsByClassName('treeselect');
+		treeselect.querySelector('treeselect-sub').style.display = 'hide';
+		treeselect.classList.remove('fa-chevron-down');
+		treeselect.classList.add('fa-chevron-right');
 	});
 	// Take care of children check/uncheck all
-	$('a.checkall').click(function()
+	document.getElementsByClassName('checkall').addEventListener( 'click', function()
 	{
-		$(this).parents().eq(5).find('ul.treeselect-sub input').attr('checked', 'checked');
+		event.target.document.querySelectorAll('ul.treeselect-sub input')[5].setAttribute('checked', 'checked');
 	});
-	$('a.uncheckall').click(function()
+	document.getElementsByClassName('uncheckall').addEventListener( 'click', function()
 	{
-		$(this).parents().eq(5).find('ul.treeselect-sub input').attr('checked', false);
+		event.target.document.querySelectorAll('ul.treeselect-sub input')[5].setAttribute('checked', false);
 	});
 
 	// Take care of children toggle all
-	$('a.expandall').click(function()
+	document.getElementsByClassName('expandall').addEventListener( 'click', function()
 	{
-		var $parent = $(this).parents().eq(6);
-		$parent.find('ul.treeselect-sub').show();
-		$parent.find('ul.treeselect-sub i.treeselect-toggle').removeClass('fa-chevron-right').addClass('fa-chevron-down');
+		var element =  event.target.parentNode;
+		var parent = document.querySelectorAll(element)[6];
+		parent.querySelector('ul.treeselect-sub').style.display = 'visible';
+		parent.querySelector('ul.treeselect-sub i.treeselect-toggle').classList.remove('fa-chevron-right').addClass('fa-chevron-down');
+		parent.querySelector('ul.treeselect-sub i.treeselect-toggle').classList.addClass('fa-chevron-down');
 	});
-	$('a.collapseall').click(function()
+	document.getElementsByClassName('collapseall').addEventListener( 'click', function()
 	{
-		var $parent = $(this).parents().eq(6);
-		$parent.find('li ul.treeselect-sub').hide();
-		$parent.find('li i.treeselect-toggle').removeClass('fa-chevron-down').addClass('fa-chevron-right');
+		var element =  event.target.parentNode;
+		var parent = document.querySelectorAll(element)[6];
+		parent.querySelector('li ul.treeselect-sub').style.display = 'none';
+		parent.querySelector('li i.treeselect-toggle').classList.remove('fa-chevron-down').addClass('fa-chevron-right');
+		parent.querySelector('li i.treeselect-toggle').classList.add('fa-chevron-right');
 	});
-});
+})(Joomla);
