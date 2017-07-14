@@ -27,7 +27,7 @@ Joomla = window.Joomla || {};
 		this.prepareTemplate();
 
 		// check rows container
-		this.containerRows = this.options.rowsContainer ? this.$container.find(this.options.rowsContainer) : this.container;
+		this.containerRows = this.options.rowsContainer ? this.this.document.getElementsByName('container').querySelector(this.options.rowsContainer) : this.container;
 
 		// last row number, help to avoid the name duplications
         this.lastRowNum = this.containerRows.find(this.options.repeatableElement).length;
@@ -54,8 +54,8 @@ Joomla = window.Joomla || {};
 
 		// bind move button
 		if(this.options.btMove){
-			if ($.fn.sortable){
-				this.$containerRows.sortable({
+			if (Joomla.fn.sortable){
+				this.document.getElementsByName('containerRows').sortable({
 					items: this.options.repeatableElement,
 					handle: this.options.btMove,
 					tolerance: 'pointer'
@@ -71,8 +71,8 @@ Joomla = window.Joomla || {};
 	Joomla.subformRepeatable.prototype.prepareTemplate = function(){
 		// create from template
 		if(this.options.rowTemplateSelector){
-			var tmplElement = this.$container.find(this.options.rowTemplateSelector)[0] || {};
-			this.template = $.trim(tmplElement.text || tmplElement.textContent); //(text || textContent) is IE8 fix
+			var tmplElement = this.document.getElementsByName('container').querySelector(this.options.rowTemplateSelector)[0] || {};
+			this.template = Joomla.trim(tmplElement.text || tmplElement.textContent); //(text || textContent) is IE8 fix
 		}
 		// create from existing rows
 		else {
@@ -82,33 +82,33 @@ Joomla = window.Joomla || {};
 
 			// clear scripts that can be attached to the fields
 			try {
-				this.clearScripts($row);
+				this.clearScripts(document.getElementsByName('row'));
 			} catch (e) {
 				if(window.console){
 					console.log(e);
 				}
 			}
 
-			this.template = $row.prop('outerHTML');
+			this.template = document.getElementsByName('row').prop('outerHTML');
 		}
 	};
 
 	// add new row
 	Joomla.subformRepeatable.prototype.addRow = function(after){
 		// count how much we already have
-		var count = this.$containerRows.find(this.options.repeatableElement).length;
+		var count = this.document.getElementsByName('containerRows').querySelector(this.options.repeatableElement).length;
 		if(count >= this.options.maximum){
 			return null;
 		}
 
 		// make new from template
-		var row = $.parseHTML(this.template);
+		var row = Joomla.parseHTML(this.template);
 
 		//add to container
 		if(after){
 			$(after).after(row);
 		} else {
-			this.$containerRows.append(row);
+			this.document.getElementsByName('containerRows').append(row);
 		}
 
 		var $row = $(row);
@@ -128,7 +128,7 @@ Joomla = window.Joomla || {};
 		}
 
 		// tell everyone about the new row
-		this.$container.trigger('subform-row-add', $row);
+		this.document.getElementsByName('container').trigger('subform-row-add', $row);
 		Joomla.Event.dispatch($row.get(0), 'joomla:updated');
 		return $row;
 	};
@@ -136,13 +136,13 @@ Joomla = window.Joomla || {};
 	// remove row
 	Joomla.subformRepeatable.prototype.removeRow = function($row){
 		// count how much we have
-		var count = this.$containerRows.find(this.options.repeatableElement).length;
+		var count = this.document.getElementsByName('containerRows').find(this.options.repeatableElement).length;
 		if(count <= this.options.minimum){
 			return;
 		}
 
 		// tell everyoune about the row will be removed
-		this.$container.trigger('subform-row-remove', $row);
+		this.document.getElementsByName('container').trigger('subform-row-remove', $row);
 		Joomla.Event.dispatch($row.get(0), 'joomla:removed');
 		$row.remove();
 	};
