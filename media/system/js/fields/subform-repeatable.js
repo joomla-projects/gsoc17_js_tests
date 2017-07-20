@@ -4,13 +4,13 @@
  */
 Joomla = window.Joomla || {};
 
-(function(){
+(function(Joomla) {
 	"use strict";
 	Joomla.subformRepeatable = function(container, options){
 		this.container = document.getElementsByName('container');
 
 		// check if alredy exist
-		if(this.container.data("subformRepeatable")){
+		if(this.container.getAttribute("data-subformRepeatable")){
 			return self;
 		}
 
@@ -30,15 +30,15 @@ Joomla = window.Joomla || {};
 		this.containerRows = this.options.rowsContainer ? this.this.document.getElementsByName('container').querySelector(this.options.rowsContainer) : this.container;
 
 		// last row number, help to avoid the name duplications
-        this.lastRowNum = this.containerRows.find(this.options.repeatableElement).length;
+        this.lastRowNum = this.containerRows.querySelector(this.options.repeatableElement).length;
 
 		// To avoid scope issues,
 		var self = this;
 
 		// bind add button
-		this.container.on('click', this.options.btAdd, function (e) {
+		this.container.addEventListener('click', this.options.btAdd, function (e) {
 			e.preventDefault();
-			var after = event.target.parents(self.options.repeatableElement);
+			var after = event.target.querySelector(self.options.repeatableElement).parentNode;
 			if(!after.length){
 				after = null;
 			}
@@ -48,7 +48,7 @@ Joomla = window.Joomla || {};
 		// bind remove button
 		this.container.on('click', this.options.btRemove, function (e) {
 			e.preventDefault();
-			var row = event.target.parents(self.options.repeatableElement);
+			var row = event.target.querySelector(self.options.repeatableElement).parentNode;
 			self.removeRow(row);
 		});
 
@@ -293,8 +293,8 @@ Joomla = window.Joomla || {};
 
 	// initialise all available
 	// wait when all will be loaded, important for scripts fix
-	$(window).on('load', function(){
-		$('div.subform-repeatable').subformRepeatable();
+	window.addEventListener('load', function(){
+		document.getElementsByClassName('subform-repeatable').subformRepeatable();
 	})
 
 })(Joomla);
