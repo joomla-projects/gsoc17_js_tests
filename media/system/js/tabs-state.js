@@ -22,7 +22,7 @@ Joomla = window.Joomla || {};
 	 * @use jQuery.urlParam('param') or $.urlParam('myRegex|anotherRegex')
 	 * If no trailing equals sign in name, add one, allows for general reuse
 	 */
-	$.urlParam = function (name) {
+	Joomla.urlParam = function (name) {
 		if (!new RegExp("=$").exec(name)) {
 			name = name + '=';
 		}
@@ -31,7 +31,7 @@ Joomla = window.Joomla || {};
 	};
 
 	// jQuery extension to get the XPATH of a DOM element
-	$.getXpath = function (el) {
+	Joomla.getXpath = function (el) {
 		if (typeof el == "string") {
 			return document.evaluate(el, document, null, 0, null);
 		}
@@ -46,11 +46,11 @@ Joomla = window.Joomla || {};
 			return x.tagName == el.tagName;
 		});
 		var b = [];
-		return $.getXpath(el.parentNode) + "/" + el.tagName.toLowerCase() + (sames.length > 1 ? "[" + (b.indexOf.call(sames, el) + 1) + "]" : "");
+		return Joomla.getXpath(el.parentNode) + "/" + el.tagName.toLowerCase() + (sames.length > 1 ? "[" + (b.indexOf.call(sames, el) + 1) + "]" : "");
 	};
 
 	// jQuery extension to get the DOM element from an XPATH
-	$.findXpath = function (exp, ctxt) {
+	Joomla.findXpath = function (exp, ctxt) {
 		var item;
 		var coll = [];
 		var result = document.evaluate(exp, ctxt || document, null, 5, null);
@@ -97,7 +97,7 @@ Joomla = window.Joomla || {};
 			var href = $(event.target).attr("href");
 
 			// find the collection of tabs this tab belongs to, and calcuate the unique xpath to it
-			var tabCollection = $.getXpath($(event.target).closest(".nav-tabs").first().get(0));
+			var tabCollection = Joomla.getXpath($(event.target).closest(".nav-tabs").first().get(0));
 
 			// error handling
 			if (!tabCollection || typeof href == "undefined") {
@@ -154,7 +154,7 @@ Joomla = window.Joomla || {};
 
 				// Click the tab
 				var parts = tabFakexPath.split("|");
-				$.findXpath(parts[0]).find("a[data-toggle='tab'][href='" + parts[1] + "']").click();
+				Joomla.findXpath(parts[0]).find("a[data-toggle='tab'][href='" + parts[1] + "']").click();
 
 			});
 
