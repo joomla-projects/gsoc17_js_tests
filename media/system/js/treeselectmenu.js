@@ -13,7 +13,7 @@ Joomla = window.Joomla || {};
 	element.forEach(function()
 	{
 		var li = event.target;
-		var div = li.find('div.treeselect-item:first');
+		var div = li.querySelector('div.treeselect-item:first');
 		var span = document.createElement("span");
 
 		// Add icons
@@ -22,7 +22,7 @@ Joomla = window.Joomla || {};
 
 		if (li.querySelector('ul.treeselect-sub').length) {
 			// Add classes to Expand/Collapse icons
-			li.querySelector('span.icon-').classList.add('treeselect-toggle fa-chevron-down');
+			li.querySelectorAll('span.icon-').classList.add('treeselect-toggle fa-chevron-down');
 
 			// Append drop down menu in nodes
 			// $div.find('label:first').after(treeselectmenu);
@@ -70,7 +70,7 @@ Joomla = window.Joomla || {};
 		var elements = list_elements.getElementsByTagName('li');
 		elements.each(function()
 		{
-			if (event.target.toLowerCase().indexOf(text) == -1) {
+			if (event.target.toLowerCase().indexOf(text) === -1) {
 				event.target.style.display = 'none';
 				hidden++;
 			}
