@@ -26,9 +26,9 @@ Joomla = window.Joomla || {};
 		this.buttonClear  = this.container.find(this.options.buttonClear);
 
 		// Bind events
-		this.buttonSelect.on('click', this.modalOpen.bind(this));
-		this.buttonClear.on('click', this.clearValue.bind(this));
-		this.modal.on('hide', this.removeIframe.bind(this));
+		this.buttonSelect.addEventListener('click', this.modalOpen.bind(this));
+		this.buttonClear.addEventListener('click', this.clearValue.bind(this));
+		this.modal.addEventListener('hide', this.removeIframe.bind(this));
 
 		// Update preview for existing value
 		this.updatePreview();
