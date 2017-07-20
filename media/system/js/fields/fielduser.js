@@ -28,33 +28,33 @@ Joomla = window.Joomla || {};
 		this.modal.on('hide', this.removeIframe.bind(this));
 
 		// Check for onchange callback,
-		var onchangeStr =  this.$input.attr('data-onchange'), onchangeCallback;
+		var onchangeStr =  this.input.setAttribute('data-onchange'), onchangeCallback;
 		if(onchangeStr) {
 			onchangeCallback = new Function(onchangeStr);
-			this.input.on('change', onchangeCallback.bind(this.$input));
+			this.input.on('change', onchangeCallback.bind(this.input));
 		}
 
 	};
 
 	// display modal for select the file
 	Joomla.fieldUser.prototype.modalOpen = function() {
-		var $iframe = $('<iframe>', {
+		var iframe = document.getElementById('<iframe>', {
 			name: 'field-user-modal',
-			src: this.options.url.replace('{field-user-id}', this.$input.attr('id')),
+			src: this.options.url.replace('{field-user-id}', this.input.attr('id')),
 			width: this.options.modalWidth,
 			height: this.options.modalHeight
 		});
-		this.$modalBody.append($iframe);
-		this.$modal.modal('show');
+		this.modalBody.append(iframe);
+		this.modal.modal('show');
 		document.getElementsByTagName('body').add('modal-open');
 
 		var self = this; // save context
 		iframe.load(function(){
-			var content = $(this).contents();
+			var content = event.target.contents();
 
 			// handle value select
 			content.on('click', '.button-select', function(){
-				self.setValue($(this).data('user-value'), $(this).data('user-name'));
+				self.setValue(event.target.data('user-value'), event.target.data('user-name'));
 				self.modalClose();
 				document.getElementsByTagName('body').classList.remove('modal-open');
 			});
@@ -70,7 +70,7 @@ Joomla = window.Joomla || {};
 
 	// close modal
 	Joomla.fieldUser.prototype.removeIframe = function() {
-		this.$modalBody.empty();
+		this.modalBody.empty();
 		document.getElementsByTagName('body').classList.remove('modal-open');
 	};
 
@@ -96,7 +96,7 @@ Joomla = window.Joomla || {};
 			var el = event.target, instance = el.data('fieldUser');
 			if(!instance){
 				var options = options || {},
-					data = $el.data();
+					data = el.getAttribute();
 
 				// Check options in the element
 				for (var p in data) {
