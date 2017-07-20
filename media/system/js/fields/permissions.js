@@ -95,7 +95,9 @@ Joomla = window.Joomla || {};
 			{
 				icon.setAttribute('class', 'icon-save');
 
-				document.getElementById(event.target).next("td").find("span")
+				var ele = document.getElementsByTagName('td');
+				var next = ele.nextSibling;
+				document.getElementById(event.target).next.querySelector("span")
 					.removeClass()
 					.addClass(response['data']['class'])
 					.html(response.data.text);
