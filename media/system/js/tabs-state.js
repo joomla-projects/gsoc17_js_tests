@@ -59,7 +59,7 @@ Joomla = window.Joomla || {};
 			coll.push(item);
 		}
 
-		return $(coll);
+		return Object.values(coll);
 	};
 
 	var loadTabs = function () {
@@ -94,10 +94,10 @@ Joomla = window.Joomla || {};
 			var storageKey = getStorageKey();
 
 			// get this tabs own href
-			var href = $(event.target).attr("href");
+			var href = document.querySelector(event.target).getAttribute("href");
 
 			// find the collection of tabs this tab belongs to, and calcuate the unique xpath to it
-			var tabCollection = Joomla.getXpath($(event.target).closest(".nav-tabs").first().get(0));
+			var tabCollection = Joomla.getXpath(document.querySelector(event.target).closest(".nav-tabs").first().get(0));
 
 			// error handling
 			if (!tabCollection || typeof href == "undefined") {
@@ -129,7 +129,7 @@ Joomla = window.Joomla || {};
 		var activeTabsHrefs = JSON.parse(sessionStorage.getItem(getStorageKey()));
 
 		// jQuery object with all tabs links
-		var alltabs = $("a[data-toggle='tab']");
+		var alltabs = document.querySelectorAll("a[data-toggle='tab']");
 
 		// When a tab is clicked, save its state!
 		alltabs.on("click", function (e) {
@@ -170,7 +170,7 @@ Joomla = window.Joomla || {};
 				alltabs.parents("ul").each(function (index, ul) {
 
 					// If no tabs is saved, activate first tab from each tab set and save it
-					var tabToClick = $(ul).find("a[href='" + window.location.hash + "']");
+					var tabToClick = document.getElementById(ul).querySelectorAll("a[href='" + window.location.hash + "']");
 
 					// If we found some|one
 					if (tabToClick.length) {
@@ -190,9 +190,9 @@ Joomla = window.Joomla || {};
 
 						// bubble up for nested tabs (like permissions tabs in the permissions pane)
 						if (parentPane) {
-							var id = parentPane.attr('id');
+							var id = document.getElementById(parentPane).getAttribute('id');
 							if (id) {
-								var parentTabToClick = $(parentPane).find("a[href='#" + id + "']");
+								var parentTabToClick = document.getElementById(parentPane).querySelectorAll("a[href='#" + id + "']");
 								if (parentTabToClick) {
 									tabsToClick.push(parentTabToClick);
 								}
@@ -234,7 +234,7 @@ Joomla = window.Joomla || {};
 			} else {
 				alltabs.parents("ul").each(function (index, ul) {
 					// If no tabs is saved, activate first tab from each tab set and save it
-					$(ul).find("a").first().click();
+					document.querySelector("ul > a").click();
 				});
 			}
 		}
