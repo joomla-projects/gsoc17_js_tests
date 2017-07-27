@@ -24,14 +24,14 @@ Joomla = window.Joomla || {};
 		this.buttonSelect = this.container.querySelector(this.options.buttonSelect);
 
 		// Bind events
-		this.buttonSelect.on('click', this.modalOpen.bind(this));
-		this.modal.on('hide', this.removeIframe.bind(this));
+		this.buttonSelect.addEventListener('click', this.modalOpen.bind(this));
+		this.modal.addEventListener('hide', this.removeIframe.bind(this));
 
 		// Check for onchange callback,
 		var onchangeStr =  this.input.setAttribute('data-onchange'), onchangeCallback;
 		if(onchangeStr) {
 			onchangeCallback = new Function(onchangeStr);
-			this.input.on('change', onchangeCallback.bind(this.input));
+			this.input.addEventListener('change', onchangeCallback.bind(this.input));
 		}
 
 	};
@@ -53,7 +53,7 @@ Joomla = window.Joomla || {};
 			var content = event.target.contents();
 
 			// handle value select
-			content.on('click', '.button-select', function(){
+			content.addEventListener('click', '.button-select', function(){
 				self.setValue(event.target.data('user-value'), event.target.data('user-name'));
 				self.modalClose();
 				document.getElementsByTagName('body').classList.remove('modal-open');
@@ -91,7 +91,7 @@ Joomla = window.Joomla || {};
 		modalHeight: '300px' // modal height
 	};
 
-	Joomla.fn.fieldUser = function(options){
+	Joomla.fieldUser = function(options){
 		return this.each(function(){
 			var el = event.target, instance = el.data('fieldUser');
 			if(!instance){
