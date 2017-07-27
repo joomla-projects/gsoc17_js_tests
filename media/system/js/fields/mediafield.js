@@ -134,7 +134,7 @@ Joomla = window.Joomla || {};
 		modalHeight: '300px', // modal height
 	};
 
-	Joomla.fn.fieldMedia = function(options){
+	Joomla.fieldMedia = function(options){
 		return this.each(function(){
 			var el = event.target, instance = el.data('fieldMedia');
 			if(!instance){
