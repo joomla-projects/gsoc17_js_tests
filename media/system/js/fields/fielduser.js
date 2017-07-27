@@ -49,7 +49,7 @@ Joomla = window.Joomla || {};
 		document.getElementsByTagName('body').add('modal-open');
 
 		var self = this; // save context
-		iframe.load(function(){
+		iframe.onload(function(){
 			var content = event.target.contents();
 
 			// handle value select
