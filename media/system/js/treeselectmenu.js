@@ -25,7 +25,6 @@ Joomla = window.Joomla || {};
 			li.querySelectorAll('span.icon-').classList.add('treeselect-toggle fa-chevron-down');
 
 			// Append drop down menu in nodes
-			// $div.find('label:first').after(treeselectmenu);
 			var element = div.querySelector('label:first');
 			element.parentNode.insertBefore(treeselectmenu, element);
 
