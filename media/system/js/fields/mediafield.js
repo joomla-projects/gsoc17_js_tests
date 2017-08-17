@@ -41,7 +41,7 @@ Joomla = window.Joomla || {};
 
 		var self = this; // save context
 
-		this.container.find(this.options.buttonSaveSelected).on('click', function(e){
+		this.container.find(this.options.buttonSaveSelected).addEventListener('click', function(e){
 			e.stopPropagation();
 			if (self.selectedPath) {
 				self.setValue(self.options.rootFolder + self.selectedPath);
