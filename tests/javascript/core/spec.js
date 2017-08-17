@@ -244,4 +244,21 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 			expect(this.form.filter_order_Dir.value).toEqual('dir')
 		});
 	});
+
+	describe('Core Joomla.submitbutton', function () {
+		var form = document.querySelectorAll( 'form.form-validate' );
+		console.log("1"+JSON.stringify(form))
+		form.task = {};
+
+		beforeEach(function () {
+			spyOnEvent('#adminForm', 'submit');
+			form.removeChild = jasmine.createSpy('removeChild');
+			document.formvalidator = new JFormValidator();
+			$('#applyBtn').click();
+		});
+
+		it('should form value greater than 0', function () {
+			expect(form.length).toBeGreaterThan(0);
+		});
+	});
 });
