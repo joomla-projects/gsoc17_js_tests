@@ -261,4 +261,29 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 			expect(form.length).toBeGreaterThan(0);
 		});
 	});
+
+	describe('Core Joomla.extend', function () {
+		var destination;
+		var source;
+		beforeEach(function () {
+			destination = {};
+			source = {
+				p: 'value',
+				p1: 'value1'
+			};
+		});
+
+		beforeAll(function () {
+			Joomla.extend(destination, source);
+		});
+
+		it('should has a property with the name of the argument', function () {
+			expect(source).toEqual(jasmine.objectContaining({
+				p: 'value'
+			}));
+			expect(source).not.toEqual(jasmine.objectContaining({
+				p2: 'value2'
+			}));
+		});
+	});
 });
