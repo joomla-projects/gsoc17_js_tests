@@ -99,9 +99,11 @@ Joomla = window.Joomla || {};
 					if (response.data.result == true) {
 						icon.setAttribute('class', 'fa fa-check');
 						var next = event.target.parentElement.nextElementSibling;
-						next.removeChild(next.querySelector('span'));
-						next.classList.setAttribute("class", "badge");
-						next.innerHTML= response.data.text;
+						while (next.tagName !== "TD") next = next.nextElementSibling;
+						var span = next.querySelectorAll('span');
+						span.remove(span);
+						span.classList.add(response['class']);
+						span.innerHTML= response.data.text;
 					}
 				}
 
