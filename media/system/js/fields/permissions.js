@@ -18,14 +18,14 @@ Joomla = window.Joomla || {};
 		icon.setAttribute('class', 'fa fa-spinner fa-spin');
 
 		//get values and prepare GET-Parameter
-		var asset = 'not';
-		var component = Joomla.getUrlParam('component');
-		var extension = Joomla.getUrlParam('extension');
-		var option    = Joomla.getUrlParam('option');
-		var view      = Joomla.getUrlParam('view');
-		var title     = component;
-		var value     = this.value;
-		var context   = '';
+		var asset     = 'not',
+			component = Joomla.getUrlParam('component'),
+			extension = Joomla.getUrlParam('extension'),
+			option    = Joomla.getUrlParam('option'),
+			view      = Joomla.getUrlParam('view'),
+			title     = component,
+			value     = this.value,
+			context   = '';
 
 		if (document.getElementById('jform_context')){
 			context = document.getElementById('jform_context').value;
@@ -60,13 +60,12 @@ Joomla = window.Joomla || {};
 		var id = this.id.replace('jform_rules_', '');
 		var lastUnderscoreIndex = id.lastIndexOf('_');
 
-		var permission_data = {
-			comp   : asset,
-			action : id.substring(0, lastUnderscoreIndex),
-			rule   : id.substring(lastUnderscoreIndex + 1),
-			value  : value,
-			title  : title
-		};
+		var permission_data = "data=" +
+			"&comp=" + asset +
+			"&action=" + id.substring(0, lastUnderscoreIndex) +
+			"&rule=" + id.substring(lastUnderscoreIndex + 1) +
+			"&value=" + value +
+			"&title=" + title;
 
 		// Remove js messages, if they exist.
 		Joomla.removeMessages();
@@ -96,14 +95,19 @@ Joomla = window.Joomla || {};
 
 				if (response.data) {
 					// Check if everything is OK
-					if (response.data.result == true) {
+					if (response.data.result === true) {
 						icon.setAttribute('class', 'fa fa-check');
 						var next = event.target.parentElement.nextElementSibling;
-						while (next.tagName !== "TD") next = next.nextElementSibling;
-						var span = next.querySelectorAll('span');
-						span.remove(span);
-						span.classList.add(response['class']);
-						span.innerHTML= response.data.text;
+						while (next.nodeName.toLowerCase() !== "td") {
+							next = next.nextElementSibling;
+						}
+
+						var span = next.querySelector('span');
+						span.removeAttribute('class');
+						span.innerHTML = '';
+						span.setAttribute('class', response.data.class);
+						span.innerHTML = response.data.text;
+
 					}
 				}
 
@@ -140,4 +144,3 @@ Joomla.getUrlParam = function(variable) {
 	}
 	return false;
 };
-
