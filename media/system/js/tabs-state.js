@@ -132,12 +132,21 @@ Joomla = window.Joomla || {};
 		var alltabs = document.querySelectorAll("a[data-toggle='tab']");
 
 		// When a tab is clicked, save its state!
-		alltabs.on("click", function (e) {
-			saveActiveTab(e);
+		alltabs.forEach(function (tab) {
+			tab.addEventListener("click", function (e) {
+				saveActiveTab(e);
+			});
 		});
 
 		// Clean default tabs
-		alltabs.parent(".active").removeClass("active");
+		alltabs.forEach(function (tab) {
+			var parent = tab.parentNode;
+			do {
+				if (parent.querySelectorAll(".active") >0){
+					parent.classList.remove("active");
+				}
+			} while ((parent = parent.parentNode));
+		});
 
 		// If we cannot find a tab storage for this url, see if we are coming from a save of a new item
 		if (!activeTabsHrefs) {
@@ -167,44 +176,46 @@ Joomla = window.Joomla || {};
 			if (window.location.hash) {
 
 				// for each set of tabs on the page
-				alltabs.parents("ul").each(function (index, ul) {
+				alltabs.forEach(function (element) {
+					getParents(element,'ul').forEach(function () {
 
-					// If no tabs is saved, activate first tab from each tab set and save it
-					var tabToClick = document.getElementById(ul).querySelectorAll("a[href='" + window.location.hash + "']");
+						// If no tabs is saved, activate first tab from each tab set and save it
+						var tabToClick = document.getElementById(ul).querySelectorAll("a[href='" + window.location.hash + "']");
 
-					// If we found some|one
-					if (tabToClick.length) {
+						// If we found some|one
+						if (tabToClick.length) {
 
-						// if we managed to locate its selector directly
-						if (tabToClick.selector) {
+							// if we managed to locate its selector directly
+							if (tabToClick.selector) {
 
-							// highlight tab of the tabs if the hash matches
-							tabsToClick.push(tabToClick);
-						} else {
+								// highlight tab of the tabs if the hash matches
+								tabsToClick.push(tabToClick);
+							} else {
 
-							// highlight first tab of the tabs
-							tabsToClick.push(tabToClick.first());
-						}
+								// highlight first tab of the tabs
+								tabsToClick.push(tabToClick.first());
+							}
 
-						var parentPane = tabToClick.closest('.tab-pane');
+							var parentPane = tabToClick.closest('.tab-pane');
 
-						// bubble up for nested tabs (like permissions tabs in the permissions pane)
-						if (parentPane) {
-							var id = document.getElementById(parentPane).getAttribute('id');
-							if (id) {
-								var parentTabToClick = document.getElementById(parentPane).querySelectorAll("a[href='#" + id + "']");
-								if (parentTabToClick) {
-									tabsToClick.push(parentTabToClick);
+							// bubble up for nested tabs (like permissions tabs in the permissions pane)
+							if (parentPane) {
+								var id = document.getElementById(parentPane).getAttribute('id');
+								if (id) {
+									var parentTabToClick = document.getElementById(parentPane).querySelectorAll("a[href='#" + id + "']");
+									if (parentTabToClick) {
+										tabsToClick.push(parentTabToClick);
+									}
 								}
 							}
 						}
-					}
 
-					// cleanup for another loop
-					parentTabToClick = null;
-					tabToClick = null;
-					parentPane = null;
-					id = null;
+						// cleanup for another loop
+						parentTabToClick = null;
+						tabToClick = null;
+						parentPane = null;
+						id = null;
+					});
 				});
 
 				// run in the right order bubbling up
@@ -232,13 +243,27 @@ Joomla = window.Joomla || {};
 				}
 
 			} else {
-				alltabs.parents("ul").each(function (index, ul) {
-					// If no tabs is saved, activate first tab from each tab set and save it
-					document.querySelector("ul > a").click();
+				alltabs.forEach(function (element) {
+					getParents(element,'ul').forEach(function () {
+						// If no tabs is saved, activate first tab from each tab set and save it
+						document.querySelector("ul > a").click();
+					});
 				});
 			}
 		}
 	};
+
+	function getParents(el, filter) {
+		var res = [];
+		var par = el.parentNode;
+		do {
+			if (!filter || par.querySelectorAll(filter) >0 ) {
+				res.push(par);
+			}
+		} while((par = par.parentNode));
+
+		return res;
+	}
 
 	setTimeout(loadTabs, 100);
 })(Joomla);
