@@ -9,6 +9,6 @@
  * @version     1.0.0
  */
 
-define(['jquery', 'text!testsRoot/multiselect/fixtures/fixture.html', 'legacy_libs/multiselect'], function ($, fixture) {
+define(['jquery', 'text!testsRoot/multiselect/fixtures/fixture.html', 'libs/multiselect'], function ($, fixture) {
 	$('body').append(fixture);
 });
