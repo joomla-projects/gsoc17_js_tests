@@ -247,7 +247,6 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 
 	describe('Core Joomla.submitbutton', function () {
 		var form = document.querySelectorAll( 'form.form-validate' );
-		console.log("1"+JSON.stringify(form))
 		form.task = {};
 
 		beforeEach(function () {
@@ -277,7 +276,7 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 			Joomla.extend(destination, source);
 		});
 
-		it('should has a property with the name of the argument', function () {
+		it('should have a property with the name of the argument', function () {
 			expect(source).toEqual(jasmine.objectContaining({
 				p: 'value'
 			}));
@@ -285,5 +284,34 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 				p2: 'value2'
 			}));
 		});
+	});
+
+	describe('Core Joomla.ajaxErrorsMessages', function () {
+		var xhr = new XMLHttpRequest(),
+			textStatus = ["parsererror", "nocontent", "timeout", "abort"],
+			error = ["Error one", "Error two", "Error three", "Error four"];
+
+
+		beforeAll(function () {
+			Joomla.ajaxErrorsMessages(xhr, textStatus, error);
+		});
+
+		it ('should have textStatus = parsererror for textStatus value', function () {
+			expect(textStatus[0]).toEqual('parsererror');
+		});
+		it ('Html entity encode should not be null', function () {
+			var encodedJson = xhr.responseText.trim();
+			expect(encodedJson).not.toBeNull();
+		});
+		it('should have textStatus = nocontent for textStatus value', function () {
+			expect(textStatus[1]).toEqual('nocontent');
+		});
+		it('should have textStatus = timeout for textStatus value', function () {
+			expect(textStatus[2]).toEqual('timeout');
+		});
+		it('should have textStatus = abort for textStatus value', function () {
+			expect(textStatus[3]).toEqual('abort');
+		});
+
 	});
 });
