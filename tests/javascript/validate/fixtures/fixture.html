@@ -4,6 +4,11 @@
 			<input class="required" type="text" name="testname"><br>
 			<textarea class="required" rows="4" cols="50">Test</textarea><br>
 			<select class="required" name="test"></select><br>
+			<input type="submit" value="Submit" name="testname" class="validate"><br>
+			<input type="image" name="testname" src="testlink" class="validate"><br>
+			<button type="submit" name="testname" class="validate"></button>
+
+			<!--<button type="image" name="testname"></button>-->
 			<fieldset class="required"></fieldset>
 		</div>
 
@@ -30,6 +35,15 @@
 			<input id="isvalid-numeric-nan" class="validate-numeric" type="text" value="NotANumber">
 			<input id="isvalid-novalidate" class="novalidate" type="text" value="test123">
 			<input id="button" class="validate" type="submit" value="Submit"><br>
+		</div>
+
+		<div id="handleResponse-test">
+			<input id="handleResponse-button" type="submit" name="testname" value="1234">
+		</div>
+
+		<div id="markValid-test">
+			<input id="imarkValid-test-input" class="markValid-test" type="text" required>
+			<label for="validate-disabled" data-value="Message"></label>
 		</div>
 	</form>
 </div>
