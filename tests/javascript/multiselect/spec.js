@@ -11,18 +11,37 @@
 
 define(['jquery', 'testsRoot/multiselect/spec-setup', 'jasmineJquery'], function ($) {
 
-	describe('JCaption applied to single image', function () {
-		var form = document.getElementById('adminForm');
+	describe('JMultiSelect applied to single form', function () {
+
 		// Set up the script
 		beforeAll(function () {
-
-			spyOnEvent('#adminForm', 'submit');
-			new Joomla.JMultiSelect(form);
+			new Joomla.JMultiSelect('#single-form form.test');
 		});
 
-		it('Should have checkbox element', function () {
-			expect($('#adminForm')).toContainElement('input[type="checkbox"]');
+		it('Should have form element', function () {
+			expect($('#single-form')).toContainElement('form');
+		});
+
+		it('Should not have multiple form element', function () {
+			var ele = document.querySelectorAll('#single-form form').length;
+			expect(ele).not.toBeGreaterThan(1);
 		});
 	});
 
+	describe('JMultiSelect with multiple checkboxes', function () {
+
+		// Set up the script
+		beforeAll(function () {
+			new Joomla.JMultiSelect('#checkbox form.test');
+		});
+
+		it('Should have checkboxes', function () {
+			expect($('#checkbox')).toContainElement('input[type="checkbox"]');
+		});
+
+		it('Should have multiple checkboxes elements', function () {
+			var ele = document.querySelectorAll('#checkbox input[type="checkbox"]').length;
+			expect(ele).toBeGreaterThan(1);
+		});
+	});
 });
