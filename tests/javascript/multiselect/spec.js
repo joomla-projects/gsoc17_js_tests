@@ -44,4 +44,20 @@ define(['jquery', 'testsRoot/multiselect/spec-setup', 'jasmineJquery'], function
 			expect(ele).toBeGreaterThan(1);
 		});
 	});
+
+	describe('JMultiSelect with Event', function () {
+
+		// Set up the script
+		beforeEach(function () {
+
+			new Joomla.JMultiSelect('#checkbox-event form.test');
+			spyOnEvent('input[type="checkbox"]', 'click');
+
+		});
+
+		it('Should have checkboxes clicked', function () {
+			expect($('multiselect-event1')).trigger( "click" );
+		});
+
+	});
 });
