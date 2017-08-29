@@ -7,7 +7,7 @@
  * JavaScript behavior to add front-end hover edit icons with tooltips for modules and menu items.
  *
  */
-(function($) {
+jQuery(function ($) {
 
 	$.fn.extend({
 		/**
@@ -42,8 +42,6 @@
 
 		}
 	});
-
-	$(document).ready(function () {
 
 		// Tooltip maximal dimensions for intelligent placement:
 		var actualWidth = 200;
@@ -196,5 +194,4 @@
 				$(this).delay(1500).queue(function(next) { $(this).popover('hide'); next() });
 			}
 		});
-	});
-})(jQuery);
+});
