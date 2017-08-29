@@ -7,8 +7,6 @@
  * @version     1.0.0
  */
 
-define(['jquery', 'text!testsRoot/frontediting/fixtures/fixture.html', 'libs/frontediting'], function ($, fixture) {
-
+define(['jquery', 'text!testsRoot/frontediting/fixtures/fixture.html', 'libs/core', 'libs/frontediting'], function ($, fixture) {
 	$('body').append(fixture);
-
 });
