@@ -30,7 +30,6 @@ define(['jquery', 'testsRoot/multiselect/spec-setup', 'jasmineJquery'], function
 
 	describe('JMultiSelect with multiple checkboxes', function () {
 
-		// Set up the script
 		beforeAll(function () {
 			new Joomla.JMultiSelect('#checkbox form.test');
 		});
@@ -46,18 +45,61 @@ define(['jquery', 'testsRoot/multiselect/spec-setup', 'jasmineJquery'], function
 	});
 
 	describe('JMultiSelect with Event', function () {
+		var spyEvent;
 
+		beforeEach(function () {
+			new Joomla.JMultiSelect('#checkbox-event form.test');
+		});
+
+		it('Should have trigger checkboxes clicked', function () {
+			spyEvent = spyOnEvent('#multiselect-event1', 'click');
+			$('#multiselect-event1').trigger( "click" );
+
+			expect('click').toHaveBeenTriggeredOn('#multiselect-event1');
+			expect(spyEvent).toHaveBeenTriggered();
+		});
+
+		it('Should have trigger shift key click in checkboxes', function () {
+			spyEvent = spyOnEvent('#shift', 'click');
+			spyEvent.shiftKey = true;
+
+			$("#shift").trigger('click');
+			expect(spyEvent).toHaveBeenTriggered();
+		});
+	});
+
+	describe('JMultiSelect trigger DOMContentLoaded event', function () {
+
+		var spyEvent;
 		// Set up the script
 		beforeEach(function () {
 
-			new Joomla.JMultiSelect('#checkbox-event form.test');
+			new Joomla.JMultiSelect('#checkbox-load form.test');
 			spyOnEvent('input[type="checkbox"]', 'click');
+			var contentLoadedEvent = document.createEvent("Event");
+			contentLoadedEvent.initEvent("DOMContentLoaded", true, true);
+			window.document.dispatchEvent(contentLoadedEvent);
 
 		});
 
-		it('Should have checkboxes clicked', function () {
-			expect($('multiselect-event1')).trigger( "click" );
+		it('Should have "tr" element whose class name begins with "row"', function () {
+			var rows = document.querySelectorAll('tr[class^="row"]');
+			expect(rows).not.toBeNull();
 		});
+		it('Should have "tr" element whose class name begins with "row"', function () {
+			var length = document.querySelectorAll('tr[class^="row"]').length;
+			expect(length).toBeGreaterThan(0);
+		});
+		it('Should have trigger the click event of multiselect-row', function () {
+			spyEvent = spyOnEvent('#multiselect-row', 'click');
+			$('#multiselect-row').trigger("click");
 
+			expect('click').toHaveBeenTriggeredOn('#multiselect-row');
+			expect(spyEvent).toHaveBeenTriggered();
+		});
+		it('Should have "checkall-toggle" elements', function () {
+			var checkallToggle = document.getElementsByName('checkall-toggle')[0];
+			expect(checkallToggle).not.toBeNull();
+		});
 	});
 });
