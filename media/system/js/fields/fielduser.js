@@ -54,7 +54,7 @@ Joomla = window.Joomla || {};
 
 			// handle value select
 			content.addEventListener('click', '.button-select', function(){
-				self.setValue(event.target.getAttribute('user-value'), event.target.getAttribute('user-name'));
+				self.setValue(event.target.getAttribute('data-user-value'), event.target.getAttribute('data-user-name'));
 				self.modalClose();
 				document.getElementsByTagName('body').classList.remove('modal-open');
 			});
@@ -93,10 +93,10 @@ Joomla = window.Joomla || {};
 
 	Joomla.fieldUser = function(options){
 		return options.forEach(function(){
-			var el = event.target, instance = el.getAttribute('fieldUser');
+			var el = event.target, instance = el.getAttribute('data-fieldUser');
 			if(!instance){
 				var options = options || {},
-					data = el.getAttribute();
+					data = el.getAttribute('data');
 
 				// Check options in the element
 				for (var p in data) {
@@ -106,7 +106,7 @@ Joomla = window.Joomla || {};
 				}
 
 				instance = new Joomla.fieldUser(this, options);
-				el.setAttribute('fieldUser', instance);
+				el.setAttribute('data-fieldUser', instance);
 			}
 		});
 	};
