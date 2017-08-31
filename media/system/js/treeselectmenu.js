@@ -141,6 +141,7 @@ Joomla = window.Joomla || {};
 			});
 		});
 	});
+	
 	// Take care of children check/uncheck all
 	document.addEventListener('DOMContentLoaded', function () {
 		var checkall = document.querySelectorAll('checkall');
