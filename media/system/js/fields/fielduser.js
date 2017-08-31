@@ -54,7 +54,7 @@ Joomla = window.Joomla || {};
 
 			// handle value select
 			content.addEventListener('click', '.button-select', function(){
-				self.setValue(event.target.data('user-value'), event.target.data('user-name'));
+				self.setValue(event.target.getAttribute('user-value'), event.target.getAttribute('user-name'));
 				self.modalClose();
 				document.getElementsByTagName('body').classList.remove('modal-open');
 			});
@@ -93,7 +93,7 @@ Joomla = window.Joomla || {};
 
 	Joomla.fieldUser = function(options){
 		return options.forEach(function(){
-			var el = event.target, instance = el.data('fieldUser');
+			var el = event.target, instance = el.getAttribute('fieldUser');
 			if(!instance){
 				var options = options || {},
 					data = el.getAttribute();
