@@ -92,7 +92,7 @@ Joomla = window.Joomla || {};
 	};
 
 	Joomla.fieldUser = function(options){
-		return this.each(function(){
+		return options.forEach(function(){
 			var el = event.target, instance = el.data('fieldUser');
 			if(!instance){
 				var options = options || {},
@@ -113,7 +113,8 @@ Joomla = window.Joomla || {};
 
 	// Initialise all defaults
 	document.addEventListener("DOMContentLoaded", function() {
-		document.getElementsByClassName('field-user-wrapper').fieldUser();
+		var elements = document.querySelectorAll('.field-user-wrapper');
+		Joomla.fieldUser(elements);
 	});
 
 })(Joomla);
