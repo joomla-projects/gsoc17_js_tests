@@ -70,6 +70,8 @@ Joomla = window.Joomla || {};
 		// Remove js messages, if they exist.
 		Joomla.removeMessages();
 
+		var self = event.target;
+
 		// doing ajax request
 		Joomla.request({
 			method: 'POST',
@@ -97,7 +99,7 @@ Joomla = window.Joomla || {};
 					// Check if everything is OK
 					if (response.data.result === true) {
 						icon.setAttribute('class', 'fa fa-check');
-						var next = event.target.parentElement.nextElementSibling;
+						var next = self.parentElement.nextElementSibling;
 						while (next.nodeName.toLowerCase() !== "td") {
 							next = next.nextElementSibling;
 						}
