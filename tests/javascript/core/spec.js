@@ -252,7 +252,6 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 		beforeEach(function () {
 			spyOnEvent('#adminForm', 'submit');
 			form.removeChild = jasmine.createSpy('removeChild');
-			document.formvalidator = new JFormValidator();
 			$('#applyBtn').click();
 		});
 

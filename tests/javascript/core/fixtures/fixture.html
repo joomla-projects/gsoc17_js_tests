@@ -1,6 +1,8 @@
 <div id="corejs">
 	<div id="submitform">
-		<form id="adminForm" onsubmit="return false"></form>
+		<form id="adminForm" onsubmit="return false" class="form-validate">
+			<button id="applyBtn" type="button" class="hidden" onclick="Joomla.submitbutton('article.add')"></button>
+		</form>
 	</div>
 	<div id="replace-tokens">
 		<input class="replace-tokens-input" type="hidden" value="1" name="123456789123456789123456789EDBCA">
@@ -46,10 +48,5 @@
 				"STRING2": "String 2"
 			}
 		}</script>
-	</div>
-	<div id="submitbutton">
-		<form name="adminForm" class="form-validate" onsubmit="return false">
-			<button id="applyBtn" type="button" class="hidden" onclick="Joomla.submitbutton('contact.apply')"></button>
-		</form>
 	</div>
 </div>
