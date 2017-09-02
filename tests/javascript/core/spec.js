@@ -263,6 +263,7 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 	describe('Core Joomla.extend', function () {
 		var destination;
 		var source;
+
 		beforeEach(function () {
 			destination = {};
 			source = {
