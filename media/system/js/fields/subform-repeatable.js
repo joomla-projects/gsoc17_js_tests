@@ -295,8 +295,8 @@ Joomla = window.Joomla || {};
 				}
 			}
 
-			var inst = new $.subformRepeatable(this, options);
-			$(this).data('subformRepeatable', inst);
+			var inst = new Joomla.subformRepeatable(this, options);
+			event.target.setAttribute('subformRepeatable', inst);
 		});
 	};
 
