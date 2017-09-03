@@ -3,13 +3,18 @@
 	<div id="ajax-test">
 		<table>
 			<tr>
-				<div>
-					<td>
-						<input id="sendBtn" type="button">
-					</td>
-				</div>
-				<td>
-					<span></span>
+				<td headers="settings-th1">
+					<select onchange="sendPermissions.call(this, event)" data-chosen="true" class="custom-select">
+						<option value="">Inherited</option>
+						<option value="1" selected="selected">Allowed</option>
+						<option value="0">Denied</option>
+					</select>&nbsp;
+					<span id="icon_jform_rules_core.delete_1" class="fa fa-check"></span>
+				</td>
+
+
+				<td headers="aclactionth1">
+					<span class="badge badge-success">Allowed</span>
 				</td>
 			</tr>
 		</table>

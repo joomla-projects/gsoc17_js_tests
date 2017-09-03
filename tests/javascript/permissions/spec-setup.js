@@ -11,11 +11,12 @@
 
 define(['jquery', 'text!testsRoot/permissions/fixtures/fixture.html', 'fields/permissions', 'libs/core'], function ($, fixture) {
 	$('body').append(fixture);
+	var ele = document.querySelector('.custom-select');
 
 	window.id = '0';
 	window.value = '1';
 
-	event = {target: '#sendBtn'};
+	event = {target: ele};
 
 	responses = {
 		success: {
