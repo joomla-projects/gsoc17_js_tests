@@ -92,9 +92,10 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 			'Jtoggle_Hide_Sidebar': 'Hide Sidebar'
 		};
 
-		beforeAll(function () {
+		beforeAll(function (done) {
 			Joomla.JText.load(ob);
-		});
+			done();
+		}, 400);
 
 		it('should add content passed via load() to the strings object', function () {
 			expect(Joomla.JText.strings.JTOGGLE_SHOW_SIDEBAR).toEqual('Show Sidebar');
@@ -222,9 +223,10 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 		var form = document.getElementById('ischecked-test-form');
 		form.boxchecked = {value: 5};
 
-		beforeAll(function () {
+		beforeAll(function (done) {
 			Joomla.isChecked(true, form);
-		});
+			done();
+		}, 400);
 
 		it('should increase form.boxchecked.value from 5 to 6', function () {
 			expect(form.boxchecked.value).toEqual(6);
@@ -235,7 +237,7 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 	});
 
 	describe('Core Joomla.tableOrdering', function () {
-		beforeAll(function () {
+		beforeAll(function (done) {
 			submitformFn = Joomla.submitform;
 			Joomla.submitform = jasmine.createSpy('submitform');
 
@@ -244,7 +246,8 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 			this.form.filter_order_Dir = {};
 
 			Joomla.tableOrdering('order', 'dir', 'task', this.form);
-		});
+			done();
+		}, 400);
 
 		afterAll(function() {
 			Joomla.submitform = submitformFn;
@@ -285,13 +288,15 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 		var source;
 
 		beforeEach(function (done) {
-			destination = {};
-			source = {
-				p: 'value',
-				p1: 'value1'
-			};
-			done();
-		}, 1);
+			setTimeout(function () {
+				destination = {};
+				source = {
+					p: 'value',
+					p1: 'value1'
+				};
+				done();
+			}, 1);
+		});
 
 		beforeAll(function (done) {
 			Joomla.extend(destination, source);
