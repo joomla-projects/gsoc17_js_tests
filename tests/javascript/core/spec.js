@@ -290,7 +290,6 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 			textStatus = ["parsererror", "nocontent", "timeout", "abort"],
 			error = ["Error one", "Error two", "Error three", "Error four"];
 
-
 		beforeAll(function () {
 			Joomla.ajaxErrorsMessages(xhr, textStatus, error);
 		});
