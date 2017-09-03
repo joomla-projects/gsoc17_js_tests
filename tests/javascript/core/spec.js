@@ -183,35 +183,38 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 			"error": ["Error one", "Error two"]
 		};
 
-		beforeAll(function () {
+		beforeAll(function (done) {
 			Joomla.JText.load({"message": "Message"});
 			Joomla.renderMessages(messages);
-		});
+			done();
+		}, 400);
 
-		it('renderMessages should render titles when translated strings are available', function () {
+		it('renderMessages should render titles when translated strings are available', function (done) {
 			expect($('h4.alert-heading').first()).toContainText('Message');
-		});
+			done();
+		}, 800);
 
-		it('renderMessages should render messages inside a div having class alert-message', function () {
+		it('renderMessages should render messages inside a div having class alert-message', function (done) {
 			var $messages = $('joomla-alert[level="success"]').children('div');
 			expect($messages[0]).toContainText('Message two');
 			expect($messages[1]).toContainText('Message one');
-		});
+			done();
+		}, 800);
 
-		it('renderMessages should render errors inside a div having class alert-error', function () {
+		it('renderMessages should render errors inside a div having class alert-error', function (done) {
 			var $messages = $('joomla-alert[level="danger"]').children('div');
 			expect($messages[0]).toContainText('Error two');
 			expect($messages[1]).toContainText('Error one');
-		});
+			done();
+		}, 800);
 
-		it('removeMessages should remove all content from system-message-container', function (done) {
+		it('removeMessages should remove all content from system-message-container', function () {
 			Joomla.removeMessages();
 
 			// Alerts need some time for the close animation
 			setTimeout(function () {
 				expect($("#system-message-container")).toBeEmpty();
-				done();
-			}, 400);
+			}, 1000);
 		});
 	});
 
@@ -288,23 +291,23 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 				p1: 'value1'
 			};
 			done();
-		}, 400);
+		}, 1);
 
 		beforeAll(function (done) {
-			setTimeout(function() {
-				Joomla.extend(destination, source);
-				done();
-			}, 300);
-		});
+			Joomla.extend(destination, source);
+			done();
+		}, 400);
 
-		it('should have a property with the name of the argument', function () {
+		it('should have a property with the name of the argument', function (done) {
 			expect(source).toEqual(jasmine.objectContaining({
 				p: 'value'
 			}));
+			done();
 			expect(source).not.toEqual(jasmine.objectContaining({
 				p2: 'value2'
 			}));
-		});
+			done();
+		}, 400);
 	});
 
 	describe('Core Joomla.ajaxErrorsMessages', function () {
@@ -313,25 +316,31 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 			error = ["Error one", "Error two", "Error three", "Error four"];
 
 
-		beforeAll(function () {
+		beforeAll(function (done) {
 			Joomla.ajaxErrorsMessages(xhr, textStatus, error);
-		});
+			done();
+		}, 400);
 
-		it ('should have textStatus = parsererror for textStatus value', function () {
+		it ('should have textStatus = parsererror for textStatus value', function (done) {
 			expect(textStatus[0]).toEqual('parsererror');
+			done();
 		});
-		it ('Html entity encode should not be null', function () {
+		it ('Html entity encode should not be null', function (done) {
 			var encodedJson = xhr.responseText.trim();
 			expect(encodedJson).not.toBeNull();
+			done();
 		});
-		it('should have textStatus = nocontent for textStatus value', function () {
+		it('should have textStatus = nocontent for textStatus value', function (done) {
 			expect(textStatus[1]).toEqual('nocontent');
+			done();
 		});
-		it('should have textStatus = timeout for textStatus value', function () {
+		it('should have textStatus = timeout for textStatus value', function (done) {
 			expect(textStatus[2]).toEqual('timeout');
+			done();
 		});
-		it('should have textStatus = abort for textStatus value', function () {
+		it('should have textStatus = abort for textStatus value', function (done) {
 			expect(textStatus[3]).toEqual('abort');
+			done();
 		});
 
 	});
