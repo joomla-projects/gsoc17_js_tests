@@ -7,7 +7,7 @@ Joomla = window.Joomla || {};
 (function(Joomla) {
 	"use strict";
 	Joomla.subformRepeatable = function(container, options){
-		this.container = document.getElementsByName('container');
+		this.container = document.querySelector(container);
 
 		// check if alredy exist
 		if(this.container.getAttribute("data-subformRepeatable")){
@@ -38,7 +38,7 @@ Joomla = window.Joomla || {};
 		// bind add button
 		this.container.addEventListener('click', this.options.btAdd, function (e) {
 			e.preventDefault();
-			var after = event.target.querySelector(self.options.repeatableElement).parentNode;
+			var after = this.querySelector(self.options.repeatableElement).parentNode;
 			if(!after.length){
 				after = null;
 			}
@@ -48,7 +48,7 @@ Joomla = window.Joomla || {};
 		// bind remove button
 		this.container.on('click', this.options.btRemove, function (e) {
 			e.preventDefault();
-			var row = event.target.querySelector(self.options.repeatableElement).parentNode;
+			var row = this.querySelector(self.options.repeatableElement).parentNode;
 			self.removeRow(row);
 		});
 
@@ -64,7 +64,9 @@ Joomla = window.Joomla || {};
 		}
 
 		// tell all that we a ready
-		this.container.trigger('subform-ready');
+		var event = this.createEvent('HTMLEvents');
+		event.initEvent('subform-ready', true, false);
+		el.dispatchEvent(event);
 	};
 
 	// prepare a template that we will use repeating
@@ -72,13 +74,13 @@ Joomla = window.Joomla || {};
 		// create from template
 		if(this.options.rowTemplateSelector){
 			var tmplElement = this.document.getElementsByName('container').querySelector(this.options.rowTemplateSelector)[0] || {};
-			this.template = Joomla.trim(tmplElement.text || tmplElement.textContent); //(text || textContent) is IE8 fix
+			this.template = (tmplElement.text || tmplElement.textContent).trim(); //(text || textContent) is IE8 fix
 		}
 		// create from existing rows
 		else {
 			//find first available
-			var row = this.container.find(this.options.repeatableElement).get(0),
-				row = $(row).clone();
+			var row = this.container.querySelector(this.options.repeatableElement),
+				row = document.querySelector('row').clone();
 
 			// clear scripts that can be attached to the fields
 			try {
@@ -102,18 +104,25 @@ Joomla = window.Joomla || {};
 		}
 
 		// make new from template
-		var row = Joomla.parseHTML(this.template);
+		var parseHTML = function(str) {
+			var tmp = document.implementation.createHTMLDocument();
+			tmp.body.innerHTML = str;
+			return tmp.body.children;
+		};
+		var row = parseHTML(this.template);
 
 		//add to container
 		if(after){
-			$(after).after(row);
+			var after = document.querySelector(after);
+			after.insertAdjacentHTML('afterend',row);
 		} else {
-			this.document.getElementsByName('containerRows').append(row);
+			var append = this.document.getElementsByName('containerRows');
+			append.appendChild(row);
 		}
 
-		var $row = $(row);
+		var row = document.querySelector(row);
 		//add marker that it is new
-		$row.attr('data-new', 'true');
+		row.setAttribute('data-new', 'true');
 		// fix names and id`s, and reset values
 		this.fixUniqueAttributes($row, count);
 
@@ -269,7 +278,7 @@ Joomla = window.Joomla || {};
 		rowsContainer: null // container for rows, same as main container by default
 	};
 
-	$.fn.subformRepeatable = function(options){
+	Joomla.subformRepeatable = function(options){
 		return this.each(function(){
 			var options = options || {},
 				data = $(this).data();
