@@ -40,7 +40,7 @@ Joomla = window.Joomla || {};
 	Joomla.fieldUser.prototype.modalOpen = function() {
 		var iframe = document.getElementById('<iframe>', {
 			name: 'field-user-modal',
-			src: this.options.url.replace('{field-user-id}', this.input.attr('id')),
+			src: this.options.url.replace('{field-user-id}', this.input.getAttribute('id')),
 			width: this.options.modalWidth,
 			height: this.options.modalHeight
 		});
@@ -92,9 +92,9 @@ Joomla = window.Joomla || {};
 	};
 
 	Joomla.fieldUser = function(options){
-		return options.forEach(function(){
-			var el = event.target, instance = el.getAttribute('data-fieldUser');
-			if(!instance){
+		return options.forEach(function(option){
+			var el = option, instance = option.getAttribute('data-fieldUser');
+			if(instance !== null){
 				var options = options || {},
 					data = el.getAttribute('data');
 
