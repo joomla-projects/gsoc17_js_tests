@@ -202,7 +202,7 @@ define(['jquery', 'testsRoot/validate/spec-setup', 'jasmineJquery'], function ($
 			});
 		});
 
-		it('Invalid element should become valid when passing the correct data', function () {
+		describe('Invalid element should become valid when passing the correct data', function () {
 			beforeAll(function () {
 				document.getElementById('isvalid-numeric-nan').setAttribute('value', 12345);
 			});
@@ -213,14 +213,13 @@ define(['jquery', 'testsRoot/validate/spec-setup', 'jasmineJquery'], function ($
 			});
 		});
 
-		it('removeMarking method on message validation', function () {
+		describe('removeMarking method on message validation', function () {
 			beforeAll(function () {
 				document.getElementById('isvalid-numeric-nan').setAttribute('value', 12345);
 			});
 
 			it('should remove class invalid from element #isvalid-numeric-nan after correcting value', function () {
 				expect(document.getElementById('isvalid-numeric-nan')).toHaveClass('valid');
-				document.getElementById('button').click();
 			});
 		});
 
