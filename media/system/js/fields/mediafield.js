@@ -135,11 +135,11 @@ Joomla = window.Joomla || {};
 	};
 
 	Joomla.fieldMedia = function(options){
-		return this.each(function(){
-			var el = event.target, instance = el.data('fieldMedia');
-			if(!instance){
+		return options.forEach(function(option){
+			var el = option, instance = el.getAttribute('data-fieldMedia');
+			if(instance !== null){
 				var options = options || {},
-				    data = $el.data();
+				    data = el.getAttribute('data');
 
 				// Check options in the element
 				for (var p in data) {
@@ -156,7 +156,8 @@ Joomla = window.Joomla || {};
 
 	// Initialise all defaults
 	document.addEventListener("DOMContentLoaded", function() {
-		document.getElementsByClassName('field-media-wrapper').fieldMedia();
+		var fields = document.querySelectorAll('.field-media-wrapper');
+			Joomla.fieldMedia(fields);
 	});
 
 })(Joomla);
