@@ -11,5 +11,4 @@
 
 define(['jquery', 'text!testsRoot/treeselectmenu/fixtures/fixture.html', 'libs/treeselectmenu'], function ($, fixture) {
 	$('body').append(fixture);
-	//document.querySelector('span.treeselect-toggle').click();
 });
