@@ -14,13 +14,22 @@ define(['jquery', 'testsRoot/treeselectmenu/spec-setup', 'jasmineJquery'], funct
 	describe('Treeselectmenu Expand/Collapse of a node', function () {
 
 		var $toggle = $('span.treeselect-toggle');
-		it('Should have trigger treeselect-toggle click', function () {
+
+		beforeEach(function () {
 			spyOnEvent('span.treeselect-toggle', 'click');
 			$('span.treeselect-toggle').click();
+		});
+		it('Should have trigger treeselect-toggle click', function () {
 			expect('click').toHaveBeenTriggeredOn('span.treeselect-toggle');
 		});
+		it('Should have parent node element to "ul.treeselect-sub"', function () {
+			expect($toggle.parent().find('ul.treeselect-sub')).toExist();
+		});
+		it('Should parent node element "ul.treeselect-sub" visible', function () {
+			expect($toggle.parent().find('ul.treeselect-sub').is(':visible')).toBe(true);
+		});
 	});
-	
+
 	describe('Treeselectmenu Checks all checkboxes the tree', function () {
 		var spyEvent;
 
@@ -55,16 +64,16 @@ define(['jquery', 'testsRoot/treeselectmenu/spec-setup', 'jasmineJquery'], funct
 		});
 	});
 	
-	describe('Treeselectmenu Checks all expanded checkboxes the tree', function () {
+	describe('Treeselectmenu ExpandAll all expanded checkboxes the tree', function () {
 		var spyEvent;
 
 		beforeEach(function () {
-			spyEvent = spyOnEvent('#treeCheckAll', 'click');
-			$('#treeCheckAll').click();
+			spyEvent = spyOnEvent('#treeExpandAll', 'click');
+			$('#treeExpandAll').click();
 		});
 
 		it('Should have trigger treeCheckAll click', function () {
-			expect('click').toHaveBeenTriggeredOn('#treeCheckAll');
+			expect('click').toHaveBeenTriggeredOn('#treeExpandAll');
 			expect(spyEvent).toHaveBeenTriggered();
 		});
 		it('Should have show the treeselect elements', function () {
@@ -73,20 +82,16 @@ define(['jquery', 'testsRoot/treeselectmenu/spec-setup', 'jasmineJquery'], funct
 		});
 	});
 
-	describe('Treeselectmenu Unchecks all collapse the tree', function () {
+	describe('Treeselectmenu tree Collapse All the tree', function () {
 		var spyEvent;
-
+		
 		beforeEach(function () {
-			spyEvent = spyOnEvent('#treeCheckAll', 'click');
-			$('#treeCheckAll').click();
+			spyEvent = spyOnEvent('#treeCollapseAll', 'click');
+			$('#treeCollapseAll').click();
 		});
-
-		it('Should have trigger treeCheckAll click', function () {
-			expect('click').toHaveBeenTriggeredOn('#treeCheckAll');
-			expect(spyEvent).toHaveBeenTriggered();
-		});
-		it('Should have checked the checkbox', function () {
-			expect($('#treeCheckAll')).toBeChecked();
+		it('Should not have show the treeselect elements', function () {
+			spyOnEvent('ul.treeselect ul.treeselect-sub', 'show');
+			$('ul.treeselect ul.treeselect-sub').hide();
 		});
 	});
 });
