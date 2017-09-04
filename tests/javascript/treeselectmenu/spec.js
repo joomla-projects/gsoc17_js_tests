@@ -10,28 +10,55 @@
  */
 
 define(['jquery', 'testsRoot/treeselectmenu/spec-setup', 'jasmineJquery'], function ($) {
-
-	describe('Treeselectmenu list of elements', function () {
-		it('Should have the message in paragraph', function () {
-			expect($('#treeselectmenu').html()).toContain('<p>treeselectmenu</p>');
+		
+		describe('Treeselectmenu Checks all checkboxes the tree', function () {
+			var spyEvent;
+			
+			beforeEach(function () {
+				spyEvent = spyOnEvent('#treeCheckAll', 'click');
+				$('#treeCheckAll').click();
+			});
+			
+			it('Should have trigger treeCheckAll click', function () {
+				expect('click').toHaveBeenTriggeredOn('#treeCheckAll');
+				expect(spyEvent).toHaveBeenTriggered();
+			});
+			it('Should have checked the checkbox', function () {
+				expect($('#treeCheckAll')).toBeChecked();
+			});
 		});
-		it('Should have treeselect-item value correctly', function () {
-			expect($('.treeselect').find('div.treeselect-item:first')).toEqual('#treeselect1')
+		
+		describe('Treeselectmenu Unchecks all checkboxes the tree', function () {
+			var spyEvent;
+			
+			beforeEach(function () {
+				spyEvent = spyOnEvent('#treeUncheckAll', 'click');
+				$('#treeUncheckAll').click();
+			});
+			
+			it('Should have trigger treeUncheckAll click', function () {
+				expect('click').toHaveBeenTriggeredOn('#treeUncheckAll');
+				expect(spyEvent).toHaveBeenTriggered();
+			});
+			it('Should not have checked the checkbox', function () {
+				expect($('#treeUncheckAll')).not.toBeChecked();
+			});
 		});
-		it('Should add new span class', function () {
-			expect($('.icon-')).toExist();
+		
+		describe('Treeselectmenu Checks all expanded checkboxes the tree', function () {
+			var spyEvent;
+			
+			beforeEach(function () {
+				spyEvent = spyOnEvent('#treeCheckAll', 'click');
+				$('#treeCheckAll').click();
+			});
+			
+			it('Should have trigger treeCheckAll click', function () {
+				expect('click').toHaveBeenTriggeredOn('#treeCheckAll');
+				expect(spyEvent).toHaveBeenTriggered();
+			});
+			it('Should have checked the checkbox', function () {
+				expect($('#treeCheckAll')).toBeChecked();
+			});
 		});
-	});
-
-	describe('Treeselectmenu Expand/Collapse of a node', function () {
-		beforeAll(function () {
-			spyOnEvent('.select-toggle', 'click');
-			$('span.select-toggle').trigger("click");
-		});
-
-		it('Should visible parent node', function () {
-			expect($('.treeselect').parent().find('ul.select-sub:visible').count()).toBe(1);
-		});
-	});
-
 });
