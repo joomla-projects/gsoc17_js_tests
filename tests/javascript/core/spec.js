@@ -120,7 +120,6 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 		});
 	});
 	
-	
 	describe('Core Joomla.replaceTokens', function () {
 		var newToken = '123456789123456789123456789ABCDE';
 		
