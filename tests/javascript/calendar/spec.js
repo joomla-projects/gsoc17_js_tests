@@ -21,19 +21,21 @@ define(['jquery', 'testsRoot/calendar/spec-setup', 'jasmineJquery'], function ($
 			JoomlaCalendar.init(element);
 		});
 
-		it('Should have calendar element under the input element', function () {
+		it('Should have calendar element under the input element', function (done) {
 			expect($('body')).toContainElement('.js-calendar');
-		});
+			done();
+		}, 800);
 
 		it('Calendar should be hidden', function () {
 			expect($('.js-calendar').css('display')).toEqual('none');
 		});
 
-		it('Should appear on button click', function () {
+		it('Should appear on button click', function (done) {
 			$('#jform_created_btn').trigger('click');
 
 			expect($('.js-calendar').css('display')).toEqual('block');
-		});
+			done();
+		}, 800);
 
 		it('Should have the correct date', function () {
 			var currentDate = new Date(),
