@@ -9,7 +9,7 @@
  */
 Joomla = window.Joomla || {};
 
-(function(Joomla) {
+(function (Joomla) {
 
 	window.sendPermissions = function(event) {
 		// set the icon while storing the values
@@ -18,28 +18,27 @@ Joomla = window.Joomla || {};
 		icon.setAttribute('class', 'fa fa-spinner fa-spin');
 
 		//get values and prepare GET-Parameter
-		var asset     = 'not',
+		var asset = 'not',
 			component = Joomla.getUrlParam('component'),
 			extension = Joomla.getUrlParam('extension'),
-			option    = Joomla.getUrlParam('option'),
-			view      = Joomla.getUrlParam('view'),
-			title     = component,
-			value     = this.value,
-			context   = '';
+			option = Joomla.getUrlParam('option'),
+			view = Joomla.getUrlParam('view'),
+			title = component,
+			value = this.value,
+			context = '';
 
-		if (document.getElementById('jform_context')){
+		if (document.getElementById('jform_context')) {
 			context = document.getElementById('jform_context').value;
 			context = context.split('.')[0];
 		}
 
-		if (option == 'com_config' && component == false && extension == false)
-		{
+		if (option == 'com_config' && component == false && extension == false) {
 			asset = 'root.1';
 		}
-		else if (extension == false && view == 'component'){
+		else if (extension == false && view == 'component') {
 			asset = component;
 		}
-		else if (context){
+		else if (context) {
 			if (view == 'group') {
 				asset = context + '.fieldgroup.' + Joomla.getUrlParam('id');
 			}
@@ -48,11 +47,11 @@ Joomla = window.Joomla || {};
 			}
 			title = document.getElementById('jform_title').value;
 		}
-		else if (extension != false && view != false){
+		else if (extension != false && view != false) {
 			asset = extension + '.' + view + '.' + Joomla.getUrlParam('id');
 			title = document.getElementById('jform_title').value;
 		}
-		else if (extension == false && view != false){
+		else if (extension == false && view != false) {
 			asset = option + '.' + view + '.' + Joomla.getUrlParam('id');
 			title = document.getElementById('jform_title').value;
 		}
@@ -128,21 +127,20 @@ Joomla = window.Joomla || {};
 				}
 			}
 		});
-	}
-})(Joomla);
+	};
 
-
-/**
- * Function to get parameters out of the url
- */
-Joomla.getUrlParam = function(variable) {
-	var query = window.location.search.substring(1);
-	var vars  = query.split('&');
-	for (var i = 0; i < vars.length; i++) {
-		var pair = vars[i].split('=');
-		if (pair[0] == variable) {
-			return pair[1];
+	/**
+	 * Function to get parameters out of the url
+	 */
+	Joomla.getUrlParam = function (variable) {
+		var query = window.location.search.substring(1);
+		var vars = query.split('&');
+		for (var i = 0; i < vars.length; i++) {
+			var pair = vars[i].split('=');
+			if (pair[0] == variable) {
+				return pair[1];
+			}
 		}
-	}
-	return false;
-};
+		return false;
+	};
+})(Joomla);
