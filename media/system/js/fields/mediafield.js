@@ -6,39 +6,42 @@
 /**
  * Field media
  */
-;(function($){
+Joomla = window.Joomla || {};
+
+(function(){
 	'use strict';
 
-	$.fieldMedia = function(container, options){
+	Joomla.fieldMedia = function(container, options){
 		// Merge options with defaults
-		this.options = $.extend({}, $.fieldMedia.defaults, options);
+
+		this.options = Joomla.extend({}, Joomla.fieldMedia.defaults, options);
 
 		// Set up elements
-		this.$container = $(container);
-		this.$modal = this.$container.find(this.options.modal);
-		this.$modalBody = this.$modal.find('.modal-body');
-		this.$input = this.$container.find(this.options.input);
-		this.$containerPreview = this.$container.find(this.options.previewContainer);
-		this.$buttonSelect = this.$container.find(this.options.buttonSelect);
-		this.$buttonClear  = this.$container.find(this.options.buttonClear);
+		this.container = document.getElementsByName('container');
+		this.modal = this.document.getElementsByName('container').find(this.options.modal);
+		this.modalBody = this.modal.find('.modal-body');
+		this.input = this.$container.find(this.options.input);
+		this.containerPreview = this.container.find(this.options.previewContainer);
+		this.buttonSelect = this.container.find(this.options.buttonSelect);
+		this.buttonClear  = this.container.find(this.options.buttonClear);
 
 		// Bind events
-		this.$buttonSelect.on('click', this.modalOpen.bind(this));
-		this.$buttonClear.on('click', this.clearValue.bind(this));
-		this.$modal.on('hide', this.removeIframe.bind(this));
+		this.buttonSelect.addEventListener('click', this.modalOpen.bind(this));
+		this.buttonClear.addEventListener('click', this.clearValue.bind(this));
+		this.modal.addEventListener('hide', this.removeIframe.bind(this));
 
 		// Update preview for existing value
 		this.updatePreview();
 	};
 
 	// display modal for select the file
-	$.fieldMedia.prototype.modalOpen = function() {
-		this.$modal.modal('show');
-		$('body').addClass('modal-open');
+	Joomla.fieldMedia.prototype.modalOpen = function() {
+		this.modal.modal('show');
+		document.getElementsByTagName('body').classList.add('modal-open');
 
 		var self = this; // save context
 
-		this.$container.find(this.options.buttonSaveSelected).on('click', function(e){
+		this.container.find(this.options.buttonSaveSelected).addEventListener('click', function(e){
 			e.stopPropagation();
 			if (self.selectedPath) {
 				self.setValue(self.options.rootFolder + self.selectedPath);
@@ -64,56 +67,56 @@
 	};
 
 	// close modal
-	$.fieldMedia.prototype.modalClose = function() {
-		this.$modal.modal('hide');
-		$('body').removeClass('modal-open');
-		this.$modalBody.empty();
+	Joomla.fieldMedia.prototype.modalClose = function() {
+		this.modal.modal('hide');
+		document.getElementsByTagName('body').classList.remove('modal-open');
+		this.modalBody.empty();
 	};
 
 	// Clear the iframe
-	$.fieldMedia.prototype.removeIframe = function() {
-		this.$modalBody.empty();
-		$('body').removeClass('modal-open');
+	Joomla.fieldMedia.prototype.removeIframe = function() {
+		this.modalBody.empty();
+		document.getElementsByTagName('body').classList.remove('modal-open');
 	};
 
 	// set the value
-	$.fieldMedia.prototype.setValue = function(value) {
-		this.$input.val(value).trigger('change');
+	Joomla.fieldMedia.prototype.setValue = function(value) {
+		this.input.val(value).trigger('change');
 		this.updatePreview();
 	};
 
 	// clear the value
-	$.fieldMedia.prototype.clearValue = function() {
+	Joomla.fieldMedia.prototype.clearValue = function() {
 		this.setValue('');
 	};
 
 	// update preview
-	$.fieldMedia.prototype.updatePreview = function() {
+	Joomla.fieldMedia.prototype.updatePreview = function() {
 		if (!this.options.preview) {
 			return;
 		}
 
 		// Reset tooltip and preview
 		if (this.options.preview) {
-			this.$containerPreview.popover('dispose');
-			this.$input.tooltip('dispose');
+			this.containerPreview.popover('dispose');
+			this.input.tooltip('dispose');
 
-			var value = this.$input.val();
+			var value = this.input.val();
 
 			if (!value) {
-				this.$containerPreview.popover();
+				this.containerPreview.popover();
 			} else {
 				var imgPreview = new Image(this.options.previewWidth, this.options.previewHeight);
 				imgPreview.src = this.options.basepath + value;
 
-				this.$containerPreview.popover({content: imgPreview});
-				this.$input.tooltip({placement: 'top', title: value});
+				this.containerPreview.popover({content: imgPreview});
+				this.input.tooltip({placement: 'top', title: value});
 			}
 		}
 	};
 
 	// default options
-	$.fieldMedia.defaults = {
+	Joomla.fieldMedia.defaults = {
 		basepath: '', // base path to file
 		rootFolder: '', // the root folder
 		buttonClear: '.button-clear', // selector for button to clear the value
@@ -131,12 +134,12 @@
 		modalHeight: '300px', // modal height
 	};
 
-	$.fn.fieldMedia = function(options){
-		return this.each(function(){
-			var $el = $(this), instance = $el.data('fieldMedia');
-			if(!instance){
+	Joomla.fieldMedia = function(options){
+		return options.forEach(function(option){
+			var el = option, instance = el.getAttribute('data-fieldMedia');
+			if(instance !== null){
 				var options = options || {},
-				    data = $el.data();
+				    data = el.getAttribute('data');
 
 				// Check options in the element
 				for (var p in data) {
@@ -145,15 +148,16 @@
 					}
 				}
 
-				instance = new $.fieldMedia(this, options);
-				$el.data('fieldMedia', instance);
+				instance = new Joomla.fieldMedia(this, options);
+				el.setAttribute('fieldMedia', instance);
 			}
 		});
 	};
 
 	// Initialise all defaults
-	$(document).ready(function(){
-		$('.field-media-wrapper').fieldMedia();
+	document.addEventListener("DOMContentLoaded", function() {
+		var fields = document.querySelectorAll('.field-media-wrapper');
+			Joomla.fieldMedia(fields);
 	});
 
-})(jQuery);
+})(Joomla);
