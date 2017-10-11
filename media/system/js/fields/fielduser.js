@@ -6,80 +6,82 @@
 /**
  * Field user
  */
-;(function($){
+Joomla = window.Joomla || {};
+
+(function(){
 	'use strict';
 
-	$.fieldUser = function(container, options){
+	Joomla.fieldUser = function(container, options){
 		// Merge options with defaults
-		this.options = $.extend({}, $.fieldUser.defaults, options);
+		this.options = Joomla.extend({}, Joomla.fieldUser.defaults, options);
 
 		// Set up elements
-		this.$container = $(container);
-		this.$modal = this.$container.find(this.options.modal);
-		this.$modalBody = this.$modal.find('.modal-body');
-		this.$input = this.$container.find(this.options.input);
-		this.$inputName = this.$container.find(this.options.inputName);
-		this.$buttonSelect = this.$container.find(this.options.buttonSelect);
+		this.container = document.getElementsByName('container');
+		this.modal = this.document.getElementsByName('container').querySelector(this.options.modal);
+		this.modalBody = this.modal.querySelector('.modal-body');
+		this.input = this.container.querySelector(this.options.input);
+		this.inputName = this.container.querySelector(this.options.inputName);
+		this.buttonSelect = this.container.querySelector(this.options.buttonSelect);
 
 		// Bind events
-		this.$buttonSelect.on('click', this.modalOpen.bind(this));
-		this.$modal.on('hide', this.removeIframe.bind(this));
+		this.buttonSelect.addEventListener('click', this.modalOpen.bind(this));
+		this.modal.addEventListener('hide', this.removeIframe.bind(this));
 
 		// Check for onchange callback,
-		var onchangeStr =  this.$input.attr('data-onchange'), onchangeCallback;
+		var onchangeStr =  this.input.setAttribute('data-onchange'), onchangeCallback;
 		if(onchangeStr) {
 			onchangeCallback = new Function(onchangeStr);
-			this.$input.on('change', onchangeCallback.bind(this.$input));
+			this.input.addEventListener('change', onchangeCallback.bind(this.input));
 		}
 
 	};
 
 	// display modal for select the file
-	$.fieldUser.prototype.modalOpen = function() {
-		var $iframe = $('<iframe>', {
+	Joomla.fieldUser.prototype.modalOpen = function() {
+		var iframe = document.getElementById('<iframe>', {
 			name: 'field-user-modal',
-			src: this.options.url.replace('{field-user-id}', this.$input.attr('id')),
+			src: this.options.url.replace('{field-user-id}', this.input.getAttribute('id')),
 			width: this.options.modalWidth,
 			height: this.options.modalHeight
 		});
-		this.$modalBody.append($iframe);
-		this.$modal.modal('show');
-		$('body').addClass('modal-open');
+		this.modalBody.append(iframe);
+		this.modal.modal('show');
+		document.getElementsByTagName('body').add('modal-open');
 
 		var self = this; // save context
-		$iframe.load(function(){
-			var content = $(this).contents();
+		iframe.onload(function(){
+			var content = event.target.contents();
 
 			// handle value select
-			content.on('click', '.button-select', function(){
-				self.setValue($(this).data('user-value'), $(this).data('user-name'));
+			content.addEventListener('click', '.button-select', function(){
+				self.setValue(event.target.getAttribute('data-user-value'), event.target.getAttribute('data-user-name'));
 				self.modalClose();
-				$('body').removeClass('modal-open');
+				document.getElementsByTagName('body').classList.remove('modal-open');
 			});
 		});
 	};
 
 	// close modal
-	$.fieldUser.prototype.modalClose = function() {
-		this.$modal.modal('hide');
-		this.$modalBody.empty();
-		$('body').removeClass('modal-open');
+	Joomla.fieldUser.prototype.modalClose = function() {
+		this.modal.modal('hide');
+		this.modalBody.empty();
+		document.getElementsByTagName('body').classList.remove('modal-open');
 	};
 
 	// close modal
-	$.fieldUser.prototype.removeIframe = function() {
-		this.$modalBody.empty();
-		$('body').removeClass('modal-open');
+	Joomla.fieldUser.prototype.removeIframe = function() {
+		this.modalBody.empty();
+		document.getElementsByTagName('body').classList.remove('modal-open');
 	};
 
 	// set the value
-	$.fieldUser.prototype.setValue = function(value, name) {
-		this.$input.val(value).trigger('change');
-		this.$inputName.val(name || value).trigger('change');
+	Joomla.fieldUser.prototype.setValue = function(value, name) {
+		this.input.val(value).trigger('change');
+		this.inputName.val(name || value).trigger('change');
 	};
 
 	// default options
-	$.fieldUser.defaults = {
+	Joomla.fieldUser.defaults = {
 		buttonSelect: '.button-select', // selector for button to change the value
 		input: '.field-user-input', // selector for the input for the user id
 		inputName: '.field-user-input-name', // selector for the input for the user name
@@ -89,12 +91,12 @@
 		modalHeight: '300px' // modal height
 	};
 
-	$.fn.fieldUser = function(options){
-		return this.each(function(){
-			var $el = $(this), instance = $el.data('fieldUser');
-			if(!instance){
+	Joomla.fieldUser = function(options){
+		return options.forEach(function(option){
+			var el = option, instance = option.getAttribute('data-fieldUser');
+			if(instance !== null){
 				var options = options || {},
-					data = $el.data();
+					data = el.getAttribute('data');
 
 				// Check options in the element
 				for (var p in data) {
@@ -103,15 +105,16 @@
 					}
 				}
 
-				instance = new $.fieldUser(this, options);
-				$el.data('fieldUser', instance);
+				instance = new Joomla.fieldUser(this, options);
+				el.setAttribute('data-fieldUser', instance);
 			}
 		});
 	};
 
 	// Initialise all defaults
-	$(document).ready(function(){
-		$('.field-user-wrapper').fieldUser();
+	document.addEventListener("DOMContentLoaded", function() {
+		var elements = document.querySelectorAll('.field-user-wrapper');
+		Joomla.fieldUser(elements);
 	});
 
-})(jQuery);
+})(Joomla);

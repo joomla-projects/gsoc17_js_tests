@@ -8,8 +8,9 @@
  * keeping state in sessionStorage with better handling of multiple tab widgets per page
  * and not saving the state if there is no id in the url (like on the CREATE page of content)
  */
+Joomla = window.Joomla || {};
 
-jQuery(function ($) {
+(function(Joomla) {
 
 	// Ensure in IE8 we can use xpath
 	if (typeof wgxpath.install === "function") {
@@ -243,4 +244,4 @@ jQuery(function ($) {
 	};
 
 	setTimeout(loadTabs, 100);
-});
+})(Joomla);
