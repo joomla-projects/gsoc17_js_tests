@@ -168,9 +168,10 @@ define(['jquery', 'testsRoot/validate/spec-setup', 'jasmineJquery'], function ($
 		});
 
 		describe('isValid method on button click', function () {
-			beforeAll(function () {
+			beforeAll(function (done) {
 				$('#button').click();
-			});
+				done();
+			}, 400);
 
 			it('should call Joomla.JText._(\'JLIB_FORM_CONTAINS_INVALID_FIELDS\')', function () {
 				expect(Joomla.JText._).toHaveBeenCalledWith('JLIB_FORM_CONTAINS_INVALID_FIELDS');
@@ -180,9 +181,10 @@ define(['jquery', 'testsRoot/validate/spec-setup', 'jasmineJquery'], function ($
 				expect(document.getElementById('isvalid-numeric-nan')).toHaveClass('invalid');
 			});
 
-			it('should have aria-invalid = true in element #isvalid-numeric-nan', function () {
+			it('should have aria-invalid = true in element #isvalid-numeric-nan', function (done) {
 				expect($element.find('#isvalid-numeric-nan')).toHaveAttr('aria-invalid', 'true');
-			});
+				done();
+			}, 400);
 
 			it('should not add class invalid to element #isvalid-novalidate', function () {
 				expect($element.find('#isvalid-novalidate')).not.toHaveClass('invalid');
