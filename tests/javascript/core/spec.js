@@ -43,18 +43,30 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 	});
 
 	describe('Core Joomla.getOptions', function () {
-		it('should return options array Joomla.getOptions("com_foobar")', function () {
-			expect(Joomla.getOptions("com_foobar")).toEqual(["my options"])
-		});
-		it('should return option string Joomla.getOptions("com_foobar2")', function () {
-			expect(Joomla.getOptions("com_foobar2")).toEqual("Alert message!")
-		});
-		it('should return option Boolean false Joomla.getOptions("com_foobar3")', function () {
-			expect(Joomla.getOptions("com_foobar3")).toEqual(false)
-		});
-		it('should return default value for not existing key Joomla.getOptions("com_foobar4", 123)', function () {
-			expect(Joomla.getOptions("com_foobar4", 123)).toEqual(123)
-		});
+		it('should return options array Joomla.getOptions("com_foobar")', function (done) {
+			setTimeout(function() {
+				expect(Joomla.getOptions("com_foobar")).toEqual(["my options"]);
+			done();
+			}, 300);
+		}, 400);
+		it('should return option string Joomla.getOptions("com_foobar2")', function (done) {
+			setTimeout(function() {
+				expect(Joomla.getOptions("com_foobar2")).toEqual("Alert message!");
+				done();
+			}, 300);
+		}, 400);
+		it('should return option Boolean false Joomla.getOptions("com_foobar3")', function (done) {
+			setTimeout(function() {
+				expect(Joomla.getOptions("com_foobar3")).toEqual(false);
+				done();
+			}, 300);
+		}, 400);
+		it('should return default value for not existing key Joomla.getOptions("com_foobar4", 123)', function (done) {
+			setTimeout(function() {
+				expect(Joomla.getOptions("com_foobar4", 123)).toEqual(123);
+				done();
+			}, 300);
+		}, 400);
 	});
 
 	describe('Core Joomla.getOptions programmatically', function () {
@@ -80,9 +92,10 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 			'Jtoggle_Hide_Sidebar': 'Hide Sidebar'
 		};
 
-		beforeAll(function () {
+		beforeAll(function (done) {
 			Joomla.JText.load(ob);
-		});
+			done();
+		}, 400);
 
 		it('should add content passed via load() to the strings object', function () {
 			expect(Joomla.JText.strings.JTOGGLE_SHOW_SIDEBAR).toEqual('Show Sidebar');
@@ -171,26 +184,30 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 			"error": ["Error one", "Error two"]
 		};
 
-		beforeAll(function () {
+		beforeAll(function (done) {
 			Joomla.JText.load({"message": "Message"});
 			Joomla.renderMessages(messages);
-		});
+			done();
+		}, 400);
 
-		it('renderMessages should render titles when translated strings are available', function () {
+		it('renderMessages should render titles when translated strings are available', function (done) {
 			expect($('h4.alert-heading').first()).toContainText('Message');
-		});
+			done();
+		}, 800);
 
-		it('renderMessages should render messages inside a div having class alert-message', function () {
+		it('renderMessages should render messages inside a div having class alert-message', function (done) {
 			var $messages = $('joomla-alert[level="success"]').children('div');
 			expect($messages[0]).toContainText('Message two');
 			expect($messages[1]).toContainText('Message one');
-		});
+			done();
+		}, 800);
 
-		it('renderMessages should render errors inside a div having class alert-error', function () {
+		it('renderMessages should render errors inside a div having class alert-error', function (done) {
 			var $messages = $('joomla-alert[level="danger"]').children('div');
 			expect($messages[0]).toContainText('Error two');
 			expect($messages[1]).toContainText('Error one');
-		});
+			done();
+		}, 800);
 
 		it('removeMessages should remove all content from system-message-container', function () {
 			Joomla.removeMessages();
@@ -198,7 +215,7 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 			// Alerts need some time for the close animation
 			setTimeout(function () {
 				expect($("#system-message-container")).toBeEmpty();
-			}, 400);
+			}, 1000);
 		});
 	});
 
@@ -206,9 +223,10 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 		var form = document.getElementById('ischecked-test-form');
 		form.boxchecked = {value: 5};
 
-		beforeAll(function () {
+		beforeAll(function (done) {
 			Joomla.isChecked(true, form);
-		});
+			done();
+		}, 400);
 
 		it('should increase form.boxchecked.value from 5 to 6', function () {
 			expect(form.boxchecked.value).toEqual(6);
@@ -219,7 +237,7 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 	});
 
 	describe('Core Joomla.tableOrdering', function () {
-		beforeAll(function () {
+		beforeAll(function (done) {
 			submitformFn = Joomla.submitform;
 			Joomla.submitform = jasmine.createSpy('submitform');
 
@@ -228,7 +246,8 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 			this.form.filter_order_Dir = {};
 
 			Joomla.tableOrdering('order', 'dir', 'task', this.form);
-		});
+			done();
+		}, 400);
 
 		afterAll(function() {
 			Joomla.submitform = submitformFn;
@@ -243,5 +262,91 @@ define(['jquery', 'testsRoot/core/spec-setup', 'jasmineJquery'], function ($) {
 		it('should set form.filter_order_Dir.value = dir', function () {
 			expect(this.form.filter_order_Dir.value).toEqual('dir')
 		});
+	});
+
+	describe('Core Joomla.submitbutton', function () {
+		var form = document.querySelectorAll( 'form.form-validate' );
+		form.task = {};
+		
+		beforeEach(function (done) {
+			setTimeout(function() {
+				spyOnEvent('#adminForm', 'submit');
+				form.removeChild = jasmine.createSpy('removeChild');
+				$('#applyBtn').click();
+				done();
+			}, 1);
+		});
+
+		it('should form value greater than 0', function (done) {
+			expect(form.length).toBeGreaterThan(0);
+			done();
+		});
+	});
+
+	describe('Core Joomla.extend', function () {
+		var destination;
+		var source;
+
+		beforeEach(function (done) {
+			setTimeout(function () {
+				destination = {};
+				source = {
+					p: 'value',
+					p1: 'value1'
+				};
+				done();
+			}, 1);
+		});
+
+		beforeAll(function (done) {
+			Joomla.extend(destination, source);
+			done();
+		}, 400);
+
+		it('should have a property with the name of the argument', function (done) {
+			expect(source).toEqual(jasmine.objectContaining({
+				p: 'value'
+			}));
+			done();
+			expect(source).not.toEqual(jasmine.objectContaining({
+				p2: 'value2'
+			}));
+			done();
+		}, 400);
+	});
+
+	describe('Core Joomla.ajaxErrorsMessages', function () {
+		var xhr = new XMLHttpRequest(),
+			textStatus = ["parsererror", "nocontent", "timeout", "abort"],
+			error = ["Error one", "Error two", "Error three", "Error four"];
+
+
+		beforeAll(function (done) {
+			Joomla.ajaxErrorsMessages(xhr, textStatus, error);
+			done();
+		}, 400);
+
+		it ('should have textStatus = parsererror for textStatus value', function (done) {
+			expect(textStatus[0]).toEqual('parsererror');
+			done();
+		});
+		it ('Html entity encode should not be null', function (done) {
+			var encodedJson = xhr.responseText.trim();
+			expect(encodedJson).not.toBeNull();
+			done();
+		});
+		it('should have textStatus = nocontent for textStatus value', function (done) {
+			expect(textStatus[1]).toEqual('nocontent');
+			done();
+		});
+		it('should have textStatus = timeout for textStatus value', function (done) {
+			expect(textStatus[2]).toEqual('timeout');
+			done();
+		});
+		it('should have textStatus = abort for textStatus value', function (done) {
+			expect(textStatus[3]).toEqual('abort');
+			done();
+		});
+
 	});
 });
