@@ -8,8 +8,9 @@
  * keeping state in sessionStorage with better handling of multiple tab widgets per page
  * and not saving the state if there is no id in the url (like on the CREATE page of content)
  */
+Joomla = window.Joomla || {};
 
-jQuery(function ($) {
+(function(Joomla) {
 
 	// Ensure in IE8 we can use xpath
 	if (typeof wgxpath.install === "function") {
@@ -21,7 +22,7 @@ jQuery(function ($) {
 	 * @use jQuery.urlParam('param') or $.urlParam('myRegex|anotherRegex')
 	 * If no trailing equals sign in name, add one, allows for general reuse
 	 */
-	$.urlParam = function (name) {
+	Joomla.urlParam = function (name) {
 		if (!new RegExp("=$").exec(name)) {
 			name = name + '=';
 		}
@@ -30,7 +31,7 @@ jQuery(function ($) {
 	};
 
 	// jQuery extension to get the XPATH of a DOM element
-	$.getXpath = function (el) {
+	Joomla.getXpath = function (el) {
 		if (typeof el == "string") {
 			return document.evaluate(el, document, null, 0, null);
 		}
@@ -45,11 +46,11 @@ jQuery(function ($) {
 			return x.tagName == el.tagName;
 		});
 		var b = [];
-		return $.getXpath(el.parentNode) + "/" + el.tagName.toLowerCase() + (sames.length > 1 ? "[" + (b.indexOf.call(sames, el) + 1) + "]" : "");
+		return Joomla.getXpath(el.parentNode) + "/" + el.tagName.toLowerCase() + (sames.length > 1 ? "[" + (b.indexOf.call(sames, el) + 1) + "]" : "");
 	};
 
 	// jQuery extension to get the DOM element from an XPATH
-	$.findXpath = function (exp, ctxt) {
+	Joomla.findXpath = function (exp, ctxt) {
 		var item;
 		var coll = [];
 		var result = document.evaluate(exp, ctxt || document, null, 5, null);
@@ -58,7 +59,7 @@ jQuery(function ($) {
 			coll.push(item);
 		}
 
-		return $(coll);
+		return Object.values(coll);
 	};
 
 	var loadTabs = function () {
@@ -96,10 +97,10 @@ jQuery(function ($) {
 			var storageKey = getStorageKey();
 
 			// get this tabs own href
-			var href = $(event.target).attr("href");
+			var href = document.querySelector(event.target).getAttribute("href");
 
 			// find the collection of tabs this tab belongs to, and calcuate the unique xpath to it
-			var tabCollection = $.getXpath($(event.target).closest(".nav-tabs").first().get(0));
+			var tabCollection = Joomla.getXpath(document.querySelector(event.target).closest(".nav-tabs").first().get(0));
 
 			// error handling
 			if (!tabCollection || typeof href == "undefined") {
@@ -131,15 +132,24 @@ jQuery(function ($) {
 		var activeTabsHrefs = JSON.parse(sessionStorage.getItem(getStorageKey()));
 
 		// jQuery object with all tabs links
-		var alltabs = $("a[data-toggle='tab']");
+		var alltabs = document.querySelectorAll("a[data-toggle='tab']");
 
 		// When a tab is clicked, save its state!
-		alltabs.on("click", function (e) {
-			saveActiveTab(e);
+		alltabs.forEach(function (tab) {
+			tab.addEventListener("click", function (e) {
+				saveActiveTab(e);
+			});
 		});
 
 		// Clean default tabs
-		alltabs.parent(".active").removeClass("active");
+		alltabs.forEach(function (tab) {
+			var parent = tab.parentNode;
+			do {
+				if (parent.querySelectorAll(".active") >0){
+					parent.classList.remove("active");
+				}
+			} while ((parent = parent.parentNode));
+		});
 
 		// If we cannot find a tab storage for this url, see if we are coming from a save of a new item
 		if (!activeTabsHrefs) {
@@ -156,7 +166,7 @@ jQuery(function ($) {
 
 				// Click the tab
 				var parts = tabFakexPath.split("|");
-				$.findXpath(parts[0]).find("a[data-toggle='tab'][href='" + parts[1] + "']").click();
+				Joomla.findXpath(parts[0]).find("a[data-toggle='tab'][href='" + parts[1] + "']").click();
 
 			});
 
@@ -169,44 +179,46 @@ jQuery(function ($) {
 			if (window.location.hash) {
 
 				// for each set of tabs on the page
-				alltabs.parents("ul").each(function (index, ul) {
+				alltabs.forEach(function (element) {
+					getParents(element,'ul').forEach(function () {
 
-					// If no tabs is saved, activate first tab from each tab set and save it
-					var tabToClick = $(ul).find("a[href='" + window.location.hash + "']");
+						// If no tabs is saved, activate first tab from each tab set and save it
+						var tabToClick = document.getElementById(ul).querySelectorAll("a[href='" + window.location.hash + "']");
 
-					// If we found some|one
-					if (tabToClick.length) {
+						// If we found some|one
+						if (tabToClick.length) {
 
-						// if we managed to locate its selector directly
-						if (tabToClick.selector) {
+							// if we managed to locate its selector directly
+							if (tabToClick.selector) {
 
-							// highlight tab of the tabs if the hash matches
-							tabsToClick.push(tabToClick);
-						} else {
+								// highlight tab of the tabs if the hash matches
+								tabsToClick.push(tabToClick);
+							} else {
 
-							// highlight first tab of the tabs
-							tabsToClick.push(tabToClick.first());
-						}
+								// highlight first tab of the tabs
+								tabsToClick.push(tabToClick.first());
+							}
 
-						var parentPane = tabToClick.closest('.tab-pane');
+							var parentPane = tabToClick.closest('.tab-pane');
 
-						// bubble up for nested tabs (like permissions tabs in the permissions pane)
-						if (parentPane) {
-							var id = parentPane.attr('id');
-							if (id) {
-								var parentTabToClick = $(parentPane).find("a[href='#" + id + "']");
-								if (parentTabToClick) {
-									tabsToClick.push(parentTabToClick);
+							// bubble up for nested tabs (like permissions tabs in the permissions pane)
+							if (parentPane) {
+								var id = document.getElementById(parentPane).getAttribute('id');
+								if (id) {
+									var parentTabToClick = document.getElementById(parentPane).querySelectorAll("a[href='#" + id + "']");
+									if (parentTabToClick) {
+										tabsToClick.push(parentTabToClick);
+									}
 								}
 							}
 						}
-					}
 
-					// cleanup for another loop
-					parentTabToClick = null;
-					tabToClick = null;
-					parentPane = null;
-					id = null;
+						// cleanup for another loop
+						parentTabToClick = null;
+						tabToClick = null;
+						parentPane = null;
+						id = null;
+					});
 				});
 
 				// run in the right order bubbling up
@@ -234,13 +246,27 @@ jQuery(function ($) {
 				}
 
 			} else {
-				alltabs.parents("ul").each(function (index, ul) {
-					// If no tabs is saved, activate first tab from each tab set and save it
-					$(ul).find("a").first().click();
+				alltabs.forEach(function (element) {
+					getParents(element,'ul').forEach(function () {
+						// If no tabs is saved, activate first tab from each tab set and save it
+						document.querySelector("ul > a").click();
+					});
 				});
 			}
 		}
 	};
 
+	function getParents(el, filter) {
+		var res = [];
+		var par = el.parentNode;
+		do {
+			if (!filter || par.querySelectorAll(filter) >0 ) {
+				res.push(par);
+			}
+		} while((par = par.parentNode));
+
+		return res;
+	}
+
 	setTimeout(loadTabs, 100);
-});
+})(Joomla);
