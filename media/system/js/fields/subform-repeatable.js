@@ -2,22 +2,23 @@
  * @copyright  Copyright (C) 2005 - 2017 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
+Joomla = window.Joomla || {};
 
-;(function($){
+(function(Joomla) {
 	"use strict";
-	$.subformRepeatable = function(container, options){
-		this.$container = $(container);
+	Joomla.subformRepeatable = function(container, options){
+		this.container = document.querySelector(container);
 
 		// check if alredy exist
-		if(this.$container.data("subformRepeatable")){
+		if(this.container.getAttribute("data-subformRepeatable")){
 			return self;
 		}
 
 		// Add a reverse reference to the DOM object
-		this.$container.data("subformRepeatable", self);
+		this.container.setAttribute("subformRepeatable", self);
 
 		// merge options
-		this.options = $.extend({}, $.subformRepeatable.defaults, options);
+		this.options = Joomla.extend({}, Joomla.subformRepeatable.defaults, options);
 
 		// template for the repeating group
 		this.template = '';
@@ -26,18 +27,18 @@
 		this.prepareTemplate();
 
 		// check rows container
-		this.$containerRows = this.options.rowsContainer ? this.$container.find(this.options.rowsContainer) : this.$container;
+		this.containerRows = this.options.rowsContainer ? this.this.document.getElementsByName('container').querySelector(this.options.rowsContainer) : this.container;
 
 		// last row number, help to avoid the name duplications
-        this.lastRowNum = this.$containerRows.find(this.options.repeatableElement).length;
+        this.lastRowNum = this.containerRows.querySelector(this.options.repeatableElement).length;
 
 		// To avoid scope issues,
 		var self = this;
 
 		// bind add button
-		this.$container.on('click', this.options.btAdd, function (e) {
+		this.container.addEventListener('click', this.options.btAdd, function (e) {
 			e.preventDefault();
-			var after = $(this).parents(self.options.repeatableElement);
+			var after = this.querySelector(self.options.repeatableElement).parentNode;
 			if(!after.length){
 				after = null;
 			}
@@ -45,16 +46,16 @@
 		});
 
 		// bind remove button
-		this.$container.on('click', this.options.btRemove, function (e) {
+		this.container.on('click', this.options.btRemove, function (e) {
 			e.preventDefault();
-			var $row = $(this).parents(self.options.repeatableElement);
-			self.removeRow($row);
+			var row = this.querySelector(self.options.repeatableElement).parentNode;
+			self.removeRow(row);
 		});
 
 		// bind move button
 		if(this.options.btMove){
-			if ($.fn.sortable){
-				this.$containerRows.sortable({
+			if (Joomla.fn.sortable){
+				this.document.getElementsByName('containerRows').sortable({
 					items: this.options.repeatableElement,
 					handle: this.options.btMove,
 					tolerance: 'pointer'
@@ -63,56 +64,65 @@
 		}
 
 		// tell all that we a ready
-		this.$container.trigger('subform-ready');
+		var event = this.createEvent('HTMLEvents');
+		event.initEvent('subform-ready', true, false);
+		el.dispatchEvent(event);
 	};
 
 	// prepare a template that we will use repeating
-	$.subformRepeatable.prototype.prepareTemplate = function(){
+	Joomla.subformRepeatable.prototype.prepareTemplate = function(){
 		// create from template
 		if(this.options.rowTemplateSelector){
-			var tmplElement = this.$container.find(this.options.rowTemplateSelector)[0] || {};
-			this.template = $.trim(tmplElement.text || tmplElement.textContent); //(text || textContent) is IE8 fix
+			var tmplElement = this.document.getElementsByName('container').querySelector(this.options.rowTemplateSelector)[0] || {};
+			this.template = (tmplElement.text || tmplElement.textContent).trim(); //(text || textContent) is IE8 fix
 		}
 		// create from existing rows
 		else {
 			//find first available
-			var row = this.$container.find(this.options.repeatableElement).get(0),
-				$row = $(row).clone();
+			var row = this.container.querySelector(this.options.repeatableElement),
+				row = document.querySelector('row').clone();
 
 			// clear scripts that can be attached to the fields
 			try {
-				this.clearScripts($row);
+				this.clearScripts(document.getElementsByName('row'));
 			} catch (e) {
 				if(window.console){
 					console.log(e);
 				}
 			}
 
-			this.template = $row.prop('outerHTML');
+			this.template = document.getElementsByName('row').prop('outerHTML');
 		}
 	};
 
 	// add new row
-	$.subformRepeatable.prototype.addRow = function(after){
+	Joomla.subformRepeatable.prototype.addRow = function(after){
 		// count how much we already have
-		var count = this.$containerRows.find(this.options.repeatableElement).length;
+		var count = this.document.getElementsByName('containerRows').querySelector(this.options.repeatableElement).length;
 		if(count >= this.options.maximum){
 			return null;
 		}
 
 		// make new from template
-		var row = $.parseHTML(this.template);
+		var parseHTML = function(str) {
+			var tmp = document.implementation.createHTMLDocument();
+			tmp.body.innerHTML = str;
+			return tmp.body.children;
+		};
+		var row = parseHTML(this.template);
 
 		//add to container
 		if(after){
-			$(after).after(row);
+			var after = document.querySelector(after);
+			after.insertAdjacentHTML('afterend',row);
 		} else {
-			this.$containerRows.append(row);
+			var append = this.document.getElementsByName('containerRows');
+			append.appendChild(row);
 		}
 
-		var $row = $(row);
+		var row = document.querySelector(row);
 		//add marker that it is new
-		$row.attr('data-new', 'true');
+		row.setAttribute('data-new', 'true');
 		// fix names and id`s, and reset values
 		this.fixUniqueAttributes($row, count);
 
@@ -127,27 +137,27 @@
 		}
 
 		// tell everyone about the new row
-		this.$container.trigger('subform-row-add', $row);
+		this.document.getElementsByName('container').trigger('subform-row-add', $row);
 		Joomla.Event.dispatch($row.get(0), 'joomla:updated');
 		return $row;
 	};
 
 	// remove row
-	$.subformRepeatable.prototype.removeRow = function($row){
+	Joomla.subformRepeatable.prototype.removeRow = function($row){
 		// count how much we have
-		var count = this.$containerRows.find(this.options.repeatableElement).length;
+		var count = this.document.getElementsByName('containerRows').find(this.options.repeatableElement).length;
 		if(count <= this.options.minimum){
 			return;
 		}
 
 		// tell everyoune about the row will be removed
-		this.$container.trigger('subform-row-remove', $row);
+		this.document.getElementsByName('container').trigger('subform-row-remove', $row);
 		Joomla.Event.dispatch($row.get(0), 'joomla:removed');
 		$row.remove();
 	};
 
 	// fix names ind id`s for field that in $row
-	$.subformRepeatable.prototype.fixUniqueAttributes = function($row, count){
+	Joomla.subformRepeatable.prototype.fixUniqueAttributes = function($row, count){
 		this.lastRowNum++;
 		var group = $row.attr('data-group'),// current group name
 			basename = $row.attr('data-base-name'), // group base name, without count
@@ -212,7 +222,7 @@
 
 	// remove scripts attached to fields
 	// @TODO: make thing better when something like that will be accepted https://github.com/joomla/joomla-cms/pull/6357
-	$.subformRepeatable.prototype.clearScripts = function($row){
+	Joomla.subformRepeatable.prototype.clearScripts = function($row){
 		// destroy chosen if any
 		if($.fn.chosen){
 			$row.find('select.chzn-done').each(function(){
@@ -225,7 +235,7 @@
 
 	// method for hack the scripts that can be related
 	// to the one of field that in given $row
-	$.subformRepeatable.prototype.fixScripts = function($row){
+	Joomla.subformRepeatable.prototype.fixScripts = function($row){
 		// fix media field
 		$row.find('a[onclick*="jInsertFieldValue"]').each(function(){
 				var $el = $(this),
@@ -260,7 +270,7 @@
 	};
 
 	// defaults
-	$.subformRepeatable.defaults = {
+	Joomla.subformRepeatable.defaults = {
 		btAdd: ".group-add", //  button selector for "add" action
 		btRemove: ".group-remove",//  button selector for "remove" action
 		btMove: ".group-move",//  button selector for "move" action
@@ -271,7 +281,7 @@
 		rowsContainer: null // container for rows, same as main container by default
 	};
 
-	$.fn.subformRepeatable = function(options){
+	Joomla.subformRepeatable = function(options){
 		return this.each(function(){
 			var options = options || {},
 				data = $(this).data();
@@ -288,15 +298,15 @@
 				}
 			}
 
-			var inst = new $.subformRepeatable(this, options);
-			$(this).data('subformRepeatable', inst);
+			var inst = new Joomla.subformRepeatable(this, options);
+			event.target.setAttribute('subformRepeatable', inst);
 		});
 	};
 
 	// initialise all available
 	// wait when all will be loaded, important for scripts fix
-	$(window).on('load', function(){
-		$('div.subform-repeatable').subformRepeatable();
+	window.addEventListener('load', function(){
+		document.getElementsByClassName('subform-repeatable').subformRepeatable();
 	})
 
-})(jQuery);
+})(Joomla);
