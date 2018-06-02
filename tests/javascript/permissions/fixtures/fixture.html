@@ -3,12 +3,10 @@
 	<div id="ajax-test">
 		<table>
 			<tr>
-				<div>
-					<td>
-						<input id="sendBtn" type="button">
-					</td>
-				</div>
-				<td>
+                <td headers="actions-th1">
+					<select onchange="sendPermissions.call(this, event)" data-chosen="true" class="custom-select"></select>
+                </td>
+				<td headers="aactions-th2">
 					<span></span>
 				</td>
 			</tr>
