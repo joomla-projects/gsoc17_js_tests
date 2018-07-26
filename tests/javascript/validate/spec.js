@@ -72,6 +72,19 @@ define(['jquery', 'testsRoot/validate/spec-setup', 'jasmineJquery'], function ($
 			it('with class \'required\' should have attributes required = required', function () {
 				expect($element.find('#attach-to-form fieldset')).toHaveAttr('required');
 			});
+
+		describe('isValid method to submit button in the form', function () {
+			it('with class \'validate\' should have tagName = input and attribute type = submit', function () {
+				expect($('#attach-to-form')).toContainElement('input[type="submit"]');
+			});
+			it('with class \'validate\' should have tagName = input and attribute type = image', function () {
+				expect($('#attach-to-form')).toContainElement('input[type="image"]');
+			});
+			it('with class \'validate\' should have tagName = button and attribute type = submit', function () {
+				expect($('#attach-to-form')).toContainElement('button[type="submit"]');
+			});
+		});
+
 		});
 
 		describe('validate method on #validate-disabled', function () {
@@ -189,7 +202,7 @@ define(['jquery', 'testsRoot/validate/spec-setup', 'jasmineJquery'], function ($
 			});
 		});
 
-		it('Invalid element should become valid when passing the correct data', function () {
+		describe('Invalid element should become valid when passing the correct data', function () {
 			beforeAll(function () {
 				document.getElementById('isvalid-numeric-nan').setAttribute('value', 12345);
 			});
@@ -197,6 +210,34 @@ define(['jquery', 'testsRoot/validate/spec-setup', 'jasmineJquery'], function ($
 			it('should remove class invalid from element #isvalid-numeric-nan after correcting value', function () {
 				expect(document.getElementById('isvalid-numeric-nan')).toHaveClass('valid');
 				document.getElementById('button').click();
+			});
+		});
+
+		describe('removeMarking method on message validation', function () {
+			beforeAll(function () {
+				document.getElementById('isvalid-numeric-nan').setAttribute('value', 12345);
+			});
+
+			it('should remove class invalid from element #isvalid-numeric-nan after correcting value', function () {
+				expect(document.getElementById('isvalid-numeric-nan')).toHaveClass('valid');
+			});
+		});
+
+		describe('handleResponse method on invalid state', function () {
+			it('should not have button element', function () {
+				expect($('#handleResponse-test')).not.toContainElement('button');
+			});
+			it('should not have undefined button', function () {
+				expect($('#handleResponse-test')).not.toHaveValue('undefined');
+			});
+		});
+
+		describe('markValid method on invalid state', function () {
+			it('should contains required filed', function () {
+				expect($('#markValid-test input')).toHaveAttr('required');
+			});
+			it('should label have value ', function () {
+				expect($('#markValid-test')).toContainElement('label');
 			});
 		});
 	});
