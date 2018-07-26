@@ -2,117 +2,193 @@
  * @copyright  Copyright (C) 2005 - 2017 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
-jQuery(function($)
-{
-	var treeselectmenu = $('div#treeselectmenu').html();
+Joomla = window.Joomla || {};
 
-	$('.treeselect li').each(function()
-	{
-		$li = $(this);
-		$div = $li.find('div.treeselect-item:first');
+(function (Joomla) {
+    document.addEventListener('DOMContentLoaded', function () {
+        var treeselectmenu = document.querySelector("div#treeselectmenu").innerHTML;
+        var treeselect = document.querySelectorAll('.treeselect li');
 
-		// Add icons
-		$li.prepend('<span class="icon-"></span>');
+        var li, div, i;
+        for (i = 0; i < treeselect.length; i++) {
+            li = event.target;
+            div = li.querySelector('div.treeselect-item');
 
-		if ($li.find('ul.treeselect-sub').length) {
-			// Add classes to Expand/Collapse icons
-			$li.find('span.icon-').addClass('treeselect-toggle fa-chevron-down');
+            // Add icons
+            treeselect[i].insertAdjacentHTML("beforebegin", "<span class='icon-'></span>");
 
-			// Append drop down menu in nodes
-			$div.find('label:first').after(treeselectmenu);
+            if (li.querySelectorAll('ul.treeselect-sub').length) {
+                // Add classes to Expand/Collapse icons
+                li.querySelector('span.icon-').classList.add('treeselect-toggle');
+                li.querySelector('span.icon-').classList.add('fa-chevron-down');
 
-			if (!$li.find('ul.treeselect-sub ul.treeselect-sub').length) {
-				$li.find('div.treeselect-menu-expand').remove();
-			}
-		}
-	});
+                // Append drop down menu in nodes
+                var element = div.querySelector('label');
+                element.insertAdjacentHTML('afterend', treeselectmenu);
 
-	// Takes care of the Expand/Collapse of a node
-	$('span.treeselect-toggle').click(function()
-	{
-		$i = $(this);
+                if (!li.querySelectorAll('ul.treeselect-sub ul.treeselect-sub').length) {
+                    li.querySelector('div.treeselect-menu-expand').classList.remove();
+                }
+            }
+        }
+    });
 
-		// Take care of parent UL
-		if ($i.parent().find('ul.treeselect-sub').is(':visible')) {
-			$i.removeClass('fa-chevron-down').addClass('fa-chevron-right');
-			$i.parent().find('ul.treeselect-sub').hide();
-			$i.parent().find('ul.treeselect-sub i.treeselect-toggle').removeClass('fa-chevron-down').addClass('fa-chevron-right');
-		} else {
-			$i.removeClass('fa-chevron-right').addClass('fa-chevron-down');
-			$i.parent().find('ul.treeselect-sub').show();
-			$i.parent().find('ul.treeselect-sub i.treeselect-toggle').removeClass('fa-chevron-right').addClass('fa-chevron-down');
-		}
-	});
+    // Takes care of the Expand/Collapse of a node
+    document.addEventListener('DOMContentLoaded', function () {
+        var toggle = document.getElementsByName('span.treeselect-toggle');
+        for (var i = 0; i < toggle.length; i++) {
+            var element = toggle[i];
+            element.addEventListener('click', function () {
+                var i = event.target;
 
-	// Takes care of the filtering
-	$('#treeselectfilter').keyup(function()
-	{
-		var text = $(this).val().toLowerCase();
-		var hidden = 0;
-		$("#noresultsfound").hide();
-		var $list_elements = $('.treeselect li');
-		$list_elements.each(function()
-		{
-			if ($(this).text().toLowerCase().indexOf(text) == -1) {
-				$(this).hide();
-				hidden++;
-			}
-			else {
-				$(this).show();
-			}
-		});
-		if(hidden == $list_elements.length)
-		{
-			$("#noresultsfound").show();
-		}
-	});
+                // Take care of parent UL
+                if (i.parentNode.querySelector('ul.treeselect-sub').offsetLeft > 0) {
+                    i.classList.remove('fa-chevron-down');
+                    i.classList.add('fa-chevron-right');
+                    i.parentNode.querySelector('ul.treeselect-sub').style.display = 'none';
+                    i.parentNode.querySelector('ul.treeselect-sub i.treeselect-toggle').classList.remove('fa-chevron-down');
+                    i.parentNode.querySelector('ul.treeselect-sub i.treeselect-toggle').classList.add('fa-chevron-right');
+                } else {
+                    i.classList.remove('fa-chevron-right');
+                    i.classList.add('fa-chevron-down');
+                    i.parentNode.querySelector('ul.treeselect-sub').style.display = 'visible';
+                    i.parentNode.querySelector('ul.treeselect-sub i.treeselect-toggle').classList.remove('fa-chevron-right');
+                    i.parentNode.querySelector('ul.treeselect-sub i.treeselect-toggle').classList.add('fa-chevron-down');
+                }
+            });
+        }
+    });
 
-	// Checks all checkboxes the tree
-	$('#treeCheckAll').click(function()
-	{
-		$('.treeselect input').attr('checked', 'checked');
-	});
+    // Takes care of the filtering
+    document.addEventListener('DOMContentLoaded', function () {
+        var treeselectfilter = document.querySelectorAll('#treeselectfilter');
 
-	// Unchecks all checkboxes the tree
-	$('#treeUncheckAll').click(function()
-	{
-		$('.treeselect input').attr('checked', false);
-	});
+        treeselectfilter.forEach(function (filter) {
+            filter.addEventListener('keyup', function () {
+                var text = this.value.toLowerCase();
+                var hidden = 0;
+                var results = document.querySelectorAll("#noresultsfound");
 
-	// Checks all checkboxes the tree
-	$('#treeExpandAll').click(function()
-	{
-		$('ul.treeselect ul.treeselect-sub').show();
-		$('ul.treeselect i.treeselect-toggle').removeClass('fa-chevron-right').addClass('fa-chevron-down');
-	});
+                results.forEach(function (result) {
+                    result.style.display = 'none';
+                    var elements = document.querySelectorAll('.treeselect li');
+                    elements.forEach(function () {
+                        if (event.target.textContent.toLowerCase().indexOf(text) === -1) {
+                            document.getElementsByClassName('card-block')[1].style.display = 'none';
+                            hidden++;
+                        }
+                        else {
+                            document.getElementsByClassName('card-block')[1].style.display = 'visible';
+                        }
+                    });
+                });
 
-	// Unchecks all checkboxes the tree
-	$('#treeCollapseAll').click(function()
-	{
-		$('ul.treeselect ul.treeselect-sub').hide();
-		$('ul.treeselect i.treeselect-toggle').removeClass('fa-chevron-down').addClass('fa-chevron-right');
-	});
-	// Take care of children check/uncheck all
-	$('a.checkall').click(function()
-	{
-		$(this).parents().eq(5).find('ul.treeselect-sub input').attr('checked', 'checked');
-	});
-	$('a.uncheckall').click(function()
-	{
-		$(this).parents().eq(5).find('ul.treeselect-sub input').attr('checked', false);
-	});
+                var tar = document.querySelectorAll("#noresultsfound");
+                tar.forEach(function (tar1) {
+                    if (hidden == tar1.length) {
+                        tar1.style.display = 'visible';
+                    }
+                });
 
-	// Take care of children toggle all
-	$('a.expandall').click(function()
-	{
-		var $parent = $(this).parents().eq(6);
-		$parent.find('ul.treeselect-sub').show();
-		$parent.find('ul.treeselect-sub i.treeselect-toggle').removeClass('fa-chevron-right').addClass('fa-chevron-down');
-	});
-	$('a.collapseall').click(function()
-	{
-		var $parent = $(this).parents().eq(6);
-		$parent.find('li ul.treeselect-sub').hide();
-		$parent.find('li i.treeselect-toggle').removeClass('fa-chevron-down').addClass('fa-chevron-right');
-	});
-});
+            });
+        })
+    });
+
+    // Checks all checkboxes the tree
+    document.addEventListener('DOMContentLoaded', function () {
+        var treeCheckAll = document.querySelectorAll('treeCheckAll');
+
+        treeCheckAll.forEach(function (treeCheck) {
+            treeCheck.addEventListener('click', function () {
+                document.getElementsByClassName('treeselect').getAttribute('input').checked = 'checked';
+            });
+        });
+    });
+
+    // Unchecks all checkboxes the tree
+    document.addEventListener('DOMContentLoaded', function () {
+        var treeUncheckAll = document.querySelectorAll('treeUncheckAll');
+
+        treeUncheckAll.forEach(function (treeUncheck) {
+            treeUncheck.addEventListener('click', function () {
+                document.getElementsByClassName('treeselect').getAttribute('input').checked = 'checked';
+            });
+        });
+    });
+
+    // Checks all checkboxes the tree
+    document.addEventListener('DOMContentLoaded', function () {
+        var treeExpandAll = document.querySelectorAll('treeExpandAll');
+
+        treeExpandAll.forEach(function (treeExpand) {
+            treeExpand.addEventListener('click', function () {
+                document.getElementsByClassName('ul.treeselect').getAttribute('ul.treeselect-sub').checked = 'checked';
+                document.getElementsByClassName('ul.treeselect').getAttribute('i.treeselect-toggle').removeClass('fa-chevron-right').addClass('fa-chevron-down');
+            });
+        })
+    });
+
+    // Unchecks all checkboxes the tree
+    document.addEventListener('DOMContentLoaded', function () {
+        var treeCollapseAll = document.querySelectorAll('treeCollapseAll');
+
+        treeCollapseAll.forEach(function (treeCollapse) {
+            treeCollapse.addEventListener('click', function () {
+                var treeselect = document.getElementsByClassName('treeselect');
+                treeselect.querySelector('treeselect-sub').style.display = 'hide';
+                treeselect.classList.remove('fa-chevron-down');
+                treeselect.classList.add('fa-chevron-right');
+            });
+        });
+    });
+
+    // Take care of children check/uncheck all
+    document.addEventListener('DOMContentLoaded', function () {
+        var checkall = document.querySelectorAll('checkall');
+
+        checkall.forEach(function (check) {
+            check.addEventListener('click', function () {
+                event.target.document.querySelectorAll('ul.treeselect-sub input')[5].setAttribute('checked', 'checked');
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var uncheckall = document.querySelectorAll('uncheckall');
+
+        uncheckall.forEach(function (uncheck) {
+            uncheck.addEventListener('click', function () {
+                event.target.document.querySelectorAll('ul.treeselect-sub input')[5].setAttribute('checked', false);
+            });
+        });
+    });
+
+    // Take care of children toggle all
+    document.addEventListener('DOMContentLoaded', function () {
+        var expandall = document.querySelectorAll('expandall');
+
+        expandall.forEach(function (expand) {
+            expand.addEventListener('click', function () {
+                var element = event.target.parentNode;
+                var parent = document.querySelectorAll(element)[6];
+                parent.querySelector('ul.treeselect-sub').style.display = 'visible';
+                parent.querySelector('ul.treeselect-sub i.treeselect-toggle').classList.remove('fa-chevron-right').addClass('fa-chevron-down');
+                parent.querySelector('ul.treeselect-sub i.treeselect-toggle').classList.addClass('fa-chevron-down');
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var collapseall = document.querySelectorAll('collapseall');
+
+        collapseall.forEach(function (collapse) {
+            collapse.addEventListener('click', function () {
+                var element = event.target.parentNode;
+                var parent = document.querySelectorAll(element)[6];
+                parent.querySelector('li ul.treeselect-sub').style.display = 'none';
+                parent.querySelector('li i.treeselect-toggle').classList.remove('fa-chevron-down').addClass('fa-chevron-right');
+                parent.querySelector('li i.treeselect-toggle').classList.add('fa-chevron-right');
+            });
+        });
+    });
+})(Joomla);
