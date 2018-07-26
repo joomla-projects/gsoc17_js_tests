@@ -9,6 +9,7 @@
  * @version     1.0.0
  */
 
-define(['jquery', 'text!testsRoot/core/fixtures/fixture.html', 'libs/core'], function ($, fixture) {
+define(['jquery', 'text!testsRoot/core/fixtures/fixture.html', 'libs/core', 'fields/validate'], function ($, fixture) {
 	$('body').append(fixture);
+	document.formvalidator = new JFormValidator();
 });
